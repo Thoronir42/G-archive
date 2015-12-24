@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="cs">
+    <head>
+        <meta charset="utf-8">
+		
+				<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+				<link rel="icon" href="favicon.ico" type="image/x-icon">
+        <title>G archiv</title>
+
+		
+		
+		{% for style in css %}
+        <link href="{{ style }}" rel="stylesheet">
+        {% endfor %}
+    </head>
+    <body>
+		<div id="headder">
+			G archiv
+		</div>
+		<div id="bodyContainer">
+			<div id="navMenu">
+				<menu>
+				{% for nav in menu %}
+					<a href="{{ nav['url'] }}"{% if nav['active'] %}class="active"{% endif %}><nav>{{ nav['title'] }}</nav></a>
+				{% endfor %}
+				</menu>
+			</div>
+			<div id="bodyContent">
+		{{ block('bodyContent') }}
+			</div>
+		</div>
+    </body>
+</html>

@@ -1,0 +1,13 @@
+{% extends layout %}
+
+
+{% block bodyContent %}
+	<h1>Vypis her</h1>
+	<div class="gameList">
+		{% for g in games%}
+			{% include 'mini/game.twig' with { 'game': g} %}
+		{% endfor %}
+		
+	</div>
+	
+{% endblock %}

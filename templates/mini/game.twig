@@ -1,0 +1,23 @@
+<div class="game" id="g{{ g.id_game }}">
+	<div class="gameTitle">{{ g.name }}</div>
+	<div class="gamePicture">
+		<div class="frame">
+			<img src="{{ g.picture_path }}" alt="{{ g.picture_description }}">
+		</div>
+	</div>
+		<hr/>
+		<a href="{{ g.edit_link }}">Upravit</a>
+		<hr/>
+	<div class="gameRating">
+		<div class="gr progress">Prog: {{ g.completion }}%</div>
+		<div class="gr rating">Rating: {{ g.affection }}/{{ max_affection }}</div>
+	</div>
+	<hr/>
+	<div class="gameStates">
+		<div class="gs cartridge">CTG: {{ g.cartridge_state }}</div>
+		<div class="gs packing">PCK: {{ g.packing_state }}</div>
+		<div class="gs cartridge">MAN: {{ g.manual_state }}</div>
+	</div>
+	<hr/>
+	<a href="{{ g.del_link }}">Smazat</a>
+</div>
