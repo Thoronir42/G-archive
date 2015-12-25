@@ -11,14 +11,13 @@ class ImageManager {
 
 	const IMG_FOLDER = __DIR__ . "/../www/img/";
 	const IMAGE_NOT_FOUND = "404.png";
-	
 	const ALLOWED_FILE_TYPES = ["jpg", "jpeg", "png", "gif"];
 	const MIN_IMG_SIZE = 150;
 	const MAX_IMG_SIZE = 2000;
 	const MAX_IMG_FILE_SIZE = 12 * 1024 * 1024;
 
 	public static function get($fileName, $extension = null) {
-		if($fileName == null){
+		if ($fileName == null) {
 			return self::IMAGE_NOT_FOUND;
 		}
 		if (file_exists(self::IMG_FOLDER . $fileName)) {
@@ -40,8 +39,9 @@ class ImageManager {
 		return self::IMAGE_NOT_FOUND;
 	}
 
-	public static function put($sourceKey, $destFile) {
+	public static function put($sourceKey) {
 		// Allow certain file formats
+		$destFile = self::getNonExistingFilename($_FILES[$sourceKey]["name"]);
 		$fileType = self::checkFileType(basename($_FILES[$sourceKey]["name"]));
 		if (!$fileType) {
 			return ['result' => false, 'message' => "Nahraný soubor " . $_FILES[$sourceKey]["name"] . " není jedním z povolených typů: " . implode(", ", self::ALLOWED_FILE_TYPES)];
@@ -89,10 +89,10 @@ class ImageManager {
 			return ['result' => false, 'message' => "Nahraný soubor není obrázek"];
 		}
 		if ($w < self::MIN_IMG_SIZE || $h < self::MIN_IMG_SIZE) {
-			return ['result' => false, 'message' => "Nahraný obrázek ($w*$h) musí být po obou rozměrech větší než ".self::MIN_IMG_SIZE. " pixelů"];
+			return ['result' => false, 'message' => "Nahraný obrázek ($w*$h) musí být po obou rozměrech větší než " . self::MIN_IMG_SIZE . " pixelů"];
 		}
 		if ($w > self::MAX_IMG_SIZE || $h > self::MAX_IMG_SIZE) {
-			return ['result' => false, 'message' => "Nahraný obrázek ($w*$h) musí být po obou rozměrech menší než ".self::MIN_IMG_SIZE." pixelů"];
+			return ['result' => false, 'message' => "Nahraný obrázek ($w*$h) musí být po obou rozměrech menší než " . self::MIN_IMG_SIZE . " pixelů"];
 		}
 		return false;
 	}
@@ -104,6 +104,20 @@ class ImageManager {
 				unlink($n);
 			}
 		}
+	}
+
+	public static function getNonExistingFilename($target_file) {
+		if (file_exists(self::IMG_FOLDER . $target_file)) {
+			$renameAttempt = 0;
+			$parts = explode('.', $target_file);
+			$name = $parts[0];
+			$suffix = $parts[1];
+			do {
+				$reName = $name . ( ++$renameAttempt) . ".$suffix";
+			} while (file_exists(self::IMG_FOLDER . $reName));
+			$target_file = $reName;
+		}
+		return $target_file;
 	}
 
 }

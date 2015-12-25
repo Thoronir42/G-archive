@@ -122,12 +122,19 @@ class Worker {
 		$this->template['submitLabel']= $uprava ? "Upravit" : "Přidat";
 		$this->template['subtitle'] =   $uprava ? "Úprava detailů hry $game->name" : "Vložení nové hry";
 	}
-	
-	public function doVloz(){
-		$pic = ["picture_path" => $this->handleFile(),
-				"description" => filter_input(INPUT_POST, "picture_description"),
-				"id_game" => NULL];
-		if(!$pic['picture_path']){
+
+	public function doVloz() {
+		$p = \model\ImageManager::put("picture");
+		if (!$p['result']) {
+			echo $p['message'];
+			echo "<a href=\"" . $this->URLgen->url(['action' => 'vypis']) . "\">Pokračovat na výpis</a>";
+			die;
+		}
+
+		$pic = ["picture_path" => $picture_path,
+			"description" => filter_input(INPUT_POST, "picture_description"),
+			"id_game" => NULL];
+		if (!$pic['picture_path']) {
 			echo "Chyba při nahrávání obrázku";
 			$this->redirect("vlozeni");
 		}
@@ -160,47 +167,6 @@ class Worker {
 		$game['completion'] = $game['completion'] * 1.0 / GameParams::COMPLETION_RANGE_ACCURACY;
 	}
 	
-	private function handleFile(){
-		$target_dir = "images/";
-		$target_file =$this->getNonExistingFilename(basename($_FILES["picture"]["name"]), $target_dir);
-		$imageFileType = pathinfo($target_dir.$target_file,PATHINFO_EXTENSION);
-		// Check if image file is a actual image or fake image
-		if(isset($_POST["submit"])) {
-			$check = getimagesize($_FILES["picture"]["tmp_name"]);
-			if($check !== false) {
-				echo "File is an image - " . $check["mime"] . ".";
-			} else {
-				echo "File is not an image.";
-				$uploadError = 1;
-			}
-		}
-		
-		// Check file size
-		if ($_FILES["picture"]["size"] > 50000000) {
-			echo "Sorry, your file is too large.";
-			$uploadError = 2;
-		}
-		// Allow certain file formats
-		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-		&& $imageFileType != "gif" ) {
-			echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-			$uploadError = 3;
-		}
-		// Check if $uploadOk is set to 0 by an error
-		if (isset($uploadError)) {
-			echo "File upload error: $uploadError";
-			return false;
-		// if everything is ok, try to upload file
-		} else {
-			if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_dir.$target_file)) {
-				echo "The file ". basename( $_FILES["picture"]["name"]). " has been uploaded as $target_file.<br/>";
-			} else {
-				echo "Sorry, there was an error uploading your file.<br/>";
-			}
-		}
-		return $target_file;
-	}
-	
 	public function renderObrazky(){
 		$this->template["subtitle"] = "loljk... maby latr. Defintly";
 	}
@@ -212,20 +178,6 @@ class Worker {
 		$location = $this->URLgen->getUrl(["action" => $action], false);
         \header("Location: /$location");
 		\header("Connection: close");
-    }
-
-	public function getNonExistingFilename($target_file, $target_dir) {
-		if (file_exists($target_dir.$target_file)) {
-			$renameAttempt = 0;
-			$parts = explode('.', $target_file);
-			$name = $parts[0];
-			$suffix = $parts[1];
-			do{
-				$reName = $name.(++$renameAttempt).".$suffix";
-			} while (file_exists($target_dir.$reName));
-			$target_file = $reName;
-		}
-		return $target_file;
 	}
 
 }
