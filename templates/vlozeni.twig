@@ -3,36 +3,64 @@
 
 {% block bodyContent %}
 	<h1>{{ subtitle }}</h1>
-	<form action="{{ formAction }}" method="post" enctype="multipart/form-data">
-		<fieldset name="std"><legend>Základní</legend>
-			<label for="name">Jméno hry</label>
-			<input type="text" name="name" value="{{ default.name}}">
-			<br>
-			<label for="picture">Titulní obrázek</label>
-			<input type="file" name="picture" id="picture">
-			<br>
+	<form action="{{ formAction }}" class="" method="post" enctype="multipart/form-data">
+		<fieldset class="form-group" name="std"><legend>Základní</legend>
+			<div class="row">
+				<div class="col-xs-6">
+			<label class="control-label" for="name">Název</label>
+			<input class="form-control" type="text" name="name" value="{{ default.name}}">
+				</div>
+				<div class="col-xs-6">
+					<label class="control-label" for="picture">Titulní obrázek</label>
+					<div class="input-group">
+						<span class="input-group-btn">
+							<span class="btn btn-default btn-file">
+								Procházet… <input type="file" name="picture">
+							</span>
+						</span>
+						<input type="text" class="form-control" readonly="">
+					</div>
+				</div>
+			</div>
+				
 			<label for="picture_description">Popis obrázku</label>
-			<input type="text" name="picture_description">
+			<input class="form-control" type="text" name="picture_description">
 		</fieldset>
 		<fieldset name="states"><legend>Stavy komponent</legend>
-			<label for="cartridge_state">Cartridge</label>
-			{% include "mini/stateSelect.twig" with {"name":"cartridge_state", "states": states, "default": default.cartridge_state}%}
-			<br/>
-			<label for="packing_state">Balení</label>
-			{% include "mini/stateSelect.twig" with {"name":"packing_state", "states": states, "default": default.packing_state}%}
-			<br/>
-			<label for="manual_state">Manuál</label>
-			{% include "mini/stateSelect.twig" with {"name":"manual_state", "states": states, "default": default.manual_state}%}
+			<div class="row">
+				<div class="col-xs-4">
+					<label class="control-label" for="cartridge_state">Cartridge</label>
+					{% include "mini/stateSelect.twig" with {"name":"cartridge_state", "states": states, "default": default.cartridge_state}%}
+				</div>
+				<div class="col-xs-4">
+					<label class="control-label" for="packing_state">Balení</label>
+					{% include "mini/stateSelect.twig" with {"name":"packing_state", "states": states, "default": default.packing_state}%}
+				</div>
+				<div class="col-xs-4">
+					<label class="control-label" for="manual_state">Manuál</label>
+					{% include "mini/stateSelect.twig" with {"name":"manual_state", "states": states, "default": default.manual_state}%}
+				</div>
+			</div>
 		</fieldset>
 		<fieldset name="opinion">
 			<legend>Poznatky</legend>
-			<label for="completion">Dokončení</label>
-			<input type="range" name="completion" min="0" max="{{range_accuracy}}" value="{{ default.completion }}">
+			<label class="control-label" for="completion">Dokončení</label>
+			<div class="input-group">
+				<input class="form-control" type="range" name="completion" min="0" max="{{range_accuracy}}" value="{{ default.completion }}">
+				<div class="input-group-addon">
+					30%
+				</div>
+			</div>
 			<br/>
-			<label for="affection">Obliba</label>
-			<input type="number" name="affection" min="1" max="{{max_affection}}" value="{{ default.affection}}">
+			<label class="control-label" for="affection">Obliba</label>
+			<input class="form-control" type="number" name="affection" min="1" max="{{max_affection}}" value="{{ default.affection}}">
 		</fieldset>
-		<input type="submit" value="{{ submitLabel }}" style="width:240px; height:40px">
+		
+		<div class="row">
+			<div class="col-xs-offset-4 col-xs-4">
+				<input class="form-control btn btn-default" type="submit" value="{{ submitLabel }}" style="width:240px; height:40px">
+			</div>
+		</div>
 	</form>
 	
 {% endblock %}
