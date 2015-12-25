@@ -30,20 +30,14 @@ class Worker {
 		$this->pdoWrapper = $p;
 		$this->URLgen = $u;
 		$this->template = [
-			"css" => [],
+			"css" => ["default.css", "game.css"],
 			"js" => [],
 			'ugen' => $u,
 		];
-		
-		$this->template["menu"] = $this->buildMenu();
-	}
-	
-	public function startUp(){
+
 		$this->layout = "layout.twig";
-		$this->template["css"][] = "default.css";
-		$this->template["css"][] = "game.css";
-		
 		$this->template["max_affection"] = GameParams::MAX_RATING;
+		$this->template["menu"] = $this->buildMenu();
 	}
 	
 	private function buildMenu(){

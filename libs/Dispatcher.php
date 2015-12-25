@@ -37,8 +37,6 @@ class Dispatcher {
 		$prepAction = $this->prepareActionName($action);
 		$contResponse = $this->getControllerResponse($prepAction);
 		
-		$contResponse["startup"]->invoke($cont);
-		unset($contResponse["startup"]);
 		$this->invokeResponse($contResponse, $cont, $action);
 		
 	}
@@ -93,7 +91,6 @@ class Dispatcher {
         $contClass = new \ReflectionClass(Worker::class);
 		$methodTypes = ["do", "render"];
 		$return = [];
-		$return["startup"] = $contClass->getMethod("startUp");
 		foreach($methodTypes as $mt){
 			$methodName = $mt.$action;
 			if ( $contClass->hasMethod($methodName) ){
