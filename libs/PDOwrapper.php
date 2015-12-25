@@ -2,9 +2,9 @@
 namespace libs;
 
 use PDO,
-		Model\Game,
-		Model\VGame,
-		Model\State;
+		model\db\Game,
+		model\db\VGame,
+		model\db\State;
 
 
 class PDOwrapper{
