@@ -9,7 +9,9 @@ use config\GameParams;
  * @author Stepan
  */
 class Worker {
-	
+
+	const DEF_ACTION = "vypis";
+
 	/** @var URLgen */
 	var $URLgen;
 	
@@ -29,7 +31,8 @@ class Worker {
 		$this->URLgen = $u;
 		$this->template = [
 			"css" => [],
-			"js" => []
+			"js" => [],
+			'ugen' => $u,
 		];
 		
 		$this->template["menu"] = $this->buildMenu();
@@ -37,8 +40,8 @@ class Worker {
 	
 	public function startUp(){
 		$this->layout = "layout.twig";
-		$this->template["css"][] = $this->URLgen->getCss("default.css");
-		$this->template["css"][] = $this->URLgen->getCss("game.css");
+		$this->template["css"][] = "default.css";
+		$this->template["css"][] = "game.css";
 		
 		$this->template["max_affection"] = GameParams::MAX_RATING;
 	}
@@ -49,9 +52,6 @@ class Worker {
 			["action" => "vlozeni", "title" => "+ Zadat novou hru"],
 			["action" => "obrazky", "title" => "Seznam obrázků"],
 		];
-		foreach($items as $key => $i){
-			$items[$key]["url"] = $this->URLgen->getUrl(["action" => $i["action"]]);
-		}
 		return $items;
 	}
 	
@@ -69,7 +69,9 @@ class Worker {
 	
 	public function renderVypis(){
 		$games =  $this->pdoWrapper->getGames();
-		$this->template['games'] = $this->humanifyGames($games);
+		$this->template['columns'] = $this->gamesToCols($games, 3);
+		$this->template['tmp_editLink'] = ['action' => 'vlozeni', 'id' => 0];
+		$this->template['tmp_remLink'] = ['action' => 'smazani', 'id' => 0];
 	}
 	
 	/**
@@ -77,11 +79,18 @@ class Worker {
 	 * @param array $games
 	 * @return array
 	 */
-	private function humanifyGames($games){
-		foreach($games as $key => $game){
-			$games[$key] = $this->verifyProperties($game);
+	private function gamesToCols($games, $colCount){
+		$columns = [];
+		for($i = 0; $i < $colCount; $i++){
+			$columns[$i] = [];
 		}
-		return $games;
+		$i = 0;
+		
+		foreach($games as $key => $game){
+			$columns[$i][] = $this->verifyProperties($game);
+			$i = ($i + 1) % $colCount;
+		}
+		return ['count' => $colCount, 'list' => $columns];
 	}
 	
 	/**
@@ -90,16 +99,8 @@ class Worker {
 	 * @return \Model\VGame
 	 */
 	private function verifyProperties($game){
-		$path = "/images/";
-		$physPath = __DIR__."/..".$path.$game->picture_path;
-		
-		$game->picture_path = file_exists($physPath) && is_file($physPath) ?
-				($path.$game->picture_path) : ($path."404.png");
 		
 		$game->completion *= GameParams::COMPLETION_RANGE_ACCURACY;
-		
-		$game->edit_link = $this->URLgen->getUrl(["action"=>"vlozeni", "id" => $game->id_game]);
-		$game->del_link = $this->URLgen->getUrl(["action"=>"smazani", "id" => $game->id_game]);
 		return $game;
 	}
 	
@@ -108,7 +109,7 @@ class Worker {
 		$id = filter_input(INPUT_GET, "id");
 		$uprava = isset($id);
 		
-		$game = $uprava ? $this->pdoWrapper->fetchGame($id) : \Model\Game::fromPost();
+		$game = $uprava ? $this->pdoWrapper->fetchGame($id) : \model\db\Game::fromPost();
 				
 		if($uprava && !$game){
 			echo "Nebylo mozné načíst hru #$id";

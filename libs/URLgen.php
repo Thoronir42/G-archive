@@ -1,30 +1,51 @@
 <?php
+
 namespace libs;
 
+use model\ImageManager;
 
-class URLgen{
-	
+class URLgen {
+
 	var $urlPrefix;
-	
-	public function __construct($prefix){
-		$this->urlPrefix =  $prefix;
+
+	public function __construct($prefix) {
+		$this->urlPrefix = $prefix;
 	}
-	
-	public function getUrl($params, $prefix = true){
-		$return = $prefix ? $this->urlPrefix : "";
+
+	public function url($params) {
+		$return = $this->urlPrefix;
+		if (!$params) {
+			return $return;
+		}
 		$first = true;
-		foreach($params as $parKey => $parVal){
-			$return.=($first ?"?":"&")."$parKey=$parVal";
+		foreach ($params as $parKey => $parVal) {
+			$return.=($first ? "?" : "&") . "$parKey=$parVal";
 			$first = false;
 		}
 		return $return;
 	}
-	
-	public function getCss($cssFile){
-		return $this->urlPrefix."css/".$cssFile;
-	}
-	public function getScript($jsFile){
-		return $this->urlPrefix."js/".$jsFile;
-	}
-}
 
+	public function aUrl($action) {
+		return $this->url(['action' => $action]);
+	}
+
+	public function css($file) {
+		return $this->urlPrefix . "css/" . $file;
+	}
+
+	public function js($file) {
+		return $this->urlPrefix . "js/" . $file;
+	}
+
+	public function img($file) {
+		$p = $this->urlPrefix . 'img/' .ImageManager::get($file);
+		return $p;
+	}
+
+	public function gDet($game_type_id) {
+		return $this->url([ 'controller' => 'vypis',
+					'action' => 'detailHry',
+					'id' => $game_type_id]);
+	}
+
+}
