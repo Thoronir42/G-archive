@@ -41,11 +41,4 @@ class URLgen {
 		$p = $this->urlPrefix . 'img/' .ImageManager::get($file);
 		return $p;
 	}
-
-	public function gDet($game_type_id) {
-		return $this->url([ 'controller' => 'vypis',
-					'action' => 'detailHry',
-					'id' => $game_type_id]);
-	}
-
 }
