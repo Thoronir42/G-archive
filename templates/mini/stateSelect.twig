@@ -1,4 +1,4 @@
-<select name="{{ name }}">
+<select name="{{ name }}" class="form-control">
 	<options>
 		{% for state in states %}
 		<option value="{{ state.id_state }}" {% if (state.id_state == default) %}selected{% endif %}>{{ state.label }}</option>
