@@ -1,23 +1,39 @@
-<div class="game" id="g{{ g.id_game }}">
-	<div class="gameTitle">{{ g.name }}</div>
-	<div class="gamePicture">
+{# mini/game.twig #}
+<div class="game panel panel-default" id="g{{ g.id_game }}">
+	<div class="gameTitle panel-heading"><span>{{ g.name }}</span></div>
+	<div class="panel-body">
 		<div class="frame">
-			<img src="{{ g.picture_path }}" alt="{{ g.picture_description }}">
+			<img src="{{ ugen.img(g.picture_path) }}" alt="{{ g.picture_description }}">
 		</div>
+		
+		<ul class='list-group'>
+			<li class="list-group-item gr">
+				Rating: {{ g.affection }}/{{ max_affection }}
+				<br/><br/>
+				<div class='progress'>
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+					aria-valuemin="0" aria-valuemax="100" style="width:40%">
+					  {{ g.completion }}%
+					</div>
+				</div>
+			</li>
+			
+			<li class="list-group-item">
+				<div class='gs cartridge'>CTG: {{ g.cartridge_state }}</div>
+				<div class="gs packing">PCK: {{ g.packing_state }}</div>
+				<div class="gs cartridge">MAN: {{ g.manual_state }}</div>
+			</li>
+			<li class='list-group-item buttons'>
+				<span class='btn-group btn-group-justified'>
+					{% set tmp_editLink = tmp_editLink|merge({ 'id': g.id_game }) %}
+					{% set tmp_remLink = tmp_remLink|merge({ 'id': g.id_game }) %}
+					<a href="{{ ugen.url(tmp_editLink) }}" class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></a>
+					<a href="{{ ugen.url(tmp_remLink) }}" class='btn btn-default'><span class='glyphicon glyphicon-remove'></span></a>
+
+				</span>
+			</li>
+		</ul>
+		
+		
 	</div>
-		<hr/>
-		<a href="{{ g.edit_link }}">Upravit</a>
-		<hr/>
-	<div class="gameRating">
-		<div class="gr progress">Prog: {{ g.completion }}%</div>
-		<div class="gr rating">Rating: {{ g.affection }}/{{ max_affection }}</div>
-	</div>
-	<hr/>
-	<div class="gameStates">
-		<div class="gs cartridge">CTG: {{ g.cartridge_state }}</div>
-		<div class="gs packing">PCK: {{ g.packing_state }}</div>
-		<div class="gs cartridge">MAN: {{ g.manual_state }}</div>
-	</div>
-	<hr/>
-	<a href="{{ g.del_link }}">Smazat</a>
 </div>
