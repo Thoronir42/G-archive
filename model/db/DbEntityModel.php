@@ -14,7 +14,7 @@ class DbEntityModel {
 	}
 	
 	public function __isset($name) {
-		return array_key_exists($name, $this->misc);
+		return !is_null($this->misc) && array_key_exists($name, $this->misc);
 	}
 	
 	public function __get($name) {

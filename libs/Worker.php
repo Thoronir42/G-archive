@@ -82,7 +82,7 @@ class Worker {
 		$i = 0;
 
 		foreach ($games as $key => $game) {
-			$columns[$i][] = $this->verifyProperties($game);
+			$columns[$i][] = $game;
 			$i = ($i + 1) % $colCount;
 		}
 		return ['count' => $colCount, 'list' => $columns];

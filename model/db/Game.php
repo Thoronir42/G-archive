@@ -39,5 +39,13 @@ class Game extends DbEntityModel {
 		}
 		return $return;
 	}
-
+	
+	
+	public function getCompletionPct(){
+		return $this->completion * \config\GameParams::COMPLETION_FIX;
+	}
+	
+	public function getCompletionVal(){
+		return $this->completion * \config\GameParams::COMPLETION_RANGE_ACCURACY;
+	}
 }
