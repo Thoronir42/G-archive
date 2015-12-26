@@ -99,14 +99,13 @@ class Worker {
 
 		if ($uprava) {
 			$game = $this->pdoWrapper->fetchGame($id);
+			if (!$game) {
+				echo "Nebylo mozné načíst hru #$id";
+				return;
+			}
 		} else {
 			$game = \model\db\Game::fromPost();
 			$game->new = true;
-		}
-
-		if ($uprava && !$game) {
-			echo "Nebylo mozné načíst hru #$id";
-			return;
 		}
 
 		$this->template['default'] = $game;
@@ -115,7 +114,7 @@ class Worker {
 		$this->template['states'] = $this->pdoWrapper->getStates();
 		$this->template['range_accuracy'] = GameParams::COMPLETION_RANGE_ACCURACY;
 
-		$this->template['formAction'] = $uprava ? "?action=uprav" : "?action=vloz";
+		$this->template['formAction'] = ["action" => $uprava ? "uprav" : "vloz"];
 		$this->template['submitLabel'] = $uprava ? "Upravit" : "Přidat";
 		$this->template['subtitle'] = $uprava ? "Úprava detailů hry $game->name" : "Vložení nové hry";
 	}
@@ -127,6 +126,7 @@ class Worker {
 			echo "<a href=\"" . $this->URLgen->url(['action' => 'vypis']) . "\">Pokračovat na výpis</a>";
 			die;
 		}
+		$picture_path = $p['path'];
 
 		$pic = ["picture_path" => $picture_path,
 			"description" => filter_input(INPUT_POST, "picture_description"),
@@ -173,6 +173,15 @@ class Worker {
 		$location = $this->URLgen->url(["action" => $action], false);
 		\header("Location: $location");
 		\header("Connection: close");
+	}
+	
+	protected function getParam($name, $method = INPUT_GET){
+		switch($method){
+			default: return null;
+			case INPUT_GET: case INPUT_POST:
+				$field = filter_input($method, $name);
+				return $field;
+		}
 	}
 
 }

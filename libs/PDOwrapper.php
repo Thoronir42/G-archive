@@ -33,6 +33,10 @@ class PDOwrapper{
 		$this->connection = $pdo;
 	}
 	
+	/**
+	 * 
+	 * @return VGame[]
+	 */
 	public function getGames(){
 		$result = $this->connection->query("SELECT * FROM games_human")
 				->fetchAll(PDO::FETCH_CLASS, VGame::class);

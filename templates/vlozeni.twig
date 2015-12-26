@@ -3,7 +3,7 @@
 
 {% block bodyContent %}
 	<h1>{{ subtitle }}</h1>
-	<form action="{{ formAction }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+	<form action="{{ ugen.url(formAction) }}" class="form-horizontal" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="id_game" value="{{ default.id_game }}">
 		<fieldset class="form-group row" name="std"><legend>Základní</legend>
 			<div class="col-xs-12">
