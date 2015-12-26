@@ -3,6 +3,9 @@ include __DIR__.'/libs/autoloader.php';
 
 use libs\Dispatcher;
 
+// Startup the session
+\libs\SessionManager::run();
+
 //	Setup PDO connection
 $cfgFile = __DIR__."/config/database.php";
 $pdoCfg = include "$cfgFile";
