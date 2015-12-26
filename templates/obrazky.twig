@@ -3,6 +3,38 @@
 
 {% block bodyContent %}
 	<h1>{{ subtitle }}</h1>
-	
-	
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<span class="panel-title">Přidání herního obrázku... nebo dvou</span>
+		</div>
+		<div class="panel-body">
+			<form action="{{ ugen.url(formAction) }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+				<div class="row">
+					<div class="col-xs-2">
+						<select name="id_game" class="form-control" {% if games is empty %} disabled="true"{% endif %}>
+							{% for g in games %}
+								<option value="{{ g.id_game }}">{{ g.name }}</option>
+							{% else %}
+								<option>Nejsou zde žádné hry, nelze přidávat obrázky</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-xs-8">
+						<div class="input-group">
+							<span class="input-group-btn">
+								<span class="btn btn-default btn-file">
+									Procházet… <input type="file" name="picture[]" multiple="true" data-count="{{ file-upload-limit }}">
+								</span>
+							</span>
+							<input type="text" class="form-control" readonly="">
+						</div>
+					</div>
+					<div class="col-xs-2">
+						<input type="submit" class="btn btn-primary form-control" value="Přilepit Špagetty">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
 {% endblock %}

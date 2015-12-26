@@ -144,29 +144,46 @@ class Worker {
 	}
 
 	public function doUprav() {
-		$game = $this->prepareGameAsArray();
+		$game = \model\db\Game::fromPost()->toArray();
+		switch($this->getParam('picture-src', INPUT_POST)){
+			case 'upload':
+				$p = \model\ImageManager::put("picture");
+				if (!$p['result']) {
+					echo "Chyba při nahrávání obrázku";
+					break;
+				}
+				$pic = ["picture_path" => $picture_path,
+					"description" => filter_input(INPUT_POST, "picture_description"),
+					"id_game" => $game['id_game']];
+				$game['picture'] = $this->pdoWrapper->insertImage($pic);
+				break;
+			case 'select':
+				$game['picture'] = $this->getParam('imgSelect', INPUT_POST);
+				break;
+			default: 
+				$game['picture'] = null;
+				break;
+		}
+		$game['completion'] = $game['completion'] * 1.0 / GameParams::COMPLETION_RANGE_ACCURACY;
 		$this->pdoWrapper->editGame($game);
-
 		$this->redirect("vypis");
 	}
 
-	/**
-	 * Reads game info from post and returns it's instance
-	 * @return \Model\db\Game 
-	 */
-	private function prepareGameAsArray($id_picture = null) {
-		$game = \model\db\Game::fromPost()->toArray();
-		if (!$id_picture) {
-			$game['picture'] = $id_picture;
-			unset($game['id_game']);
-		}
-		unset($game['misc']);
-		$game['completion'] = $game['completion'] * 1.0 / GameParams::COMPLETION_RANGE_ACCURACY;
-		return $game;
-	}
-
 	public function renderObrazky() {
+		$this->template['css'][] = "input-file.css";
+		$this->template['js'][] = "input-file.js";
+		
+		
+		$this->template['formAction'] = ['action' => 'pridejObrazky'];
+		
 		$this->template["subtitle"] = "loljk... maby latr. Defintly";
+		$this->template['games'] = $this->pdoWrapper->getGames();
+		
+	}
+	
+	public function doPridejObrazky(){
+		var_dump($_FILES);
+		die;
 	}
 
 	public function redirect($action) {
