@@ -59,8 +59,7 @@ class ImageManager {
 		}
 
 		// if everything is ok, try to upload file
-		$finalFileName = self::IMG_FOLDER . "$destFile.$fileType";
-		self::deleteIfexists(self::IMG_FOLDER . $destFile);
+		$finalFileName = self::IMG_FOLDER . $destFile;
 		if (move_uploaded_file($_FILES[$sourceKey]["tmp_name"], $finalFileName)) {
 			return ['result' => true, 'message' => "Obrázek se podařilo nahrát do $finalFileName"];
 		} else {
