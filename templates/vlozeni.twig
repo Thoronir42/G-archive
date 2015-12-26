@@ -35,7 +35,7 @@
 					<div class="col-xs-4">
 						<label class="control-label" for="picture">Titulní obrázek</label>
 						<div class="input-group"{% if default.new %} disabled{% endif%}>
-							<select class="form-control" {% if pictures is empty %} disabled="true" {% endif %}>
+							<select name="imgSelect" class="form-control" {% if pictures is empty %} disabled="true" {% endif %}>
 								{% for pic in pictures %}
 									<option value="{{ pic.id_picture }}">{{ pic.picture_path[:37] }}</option>
 								{% else%}

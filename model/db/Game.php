@@ -9,6 +9,10 @@ namespace model\db;
  */
 class Game extends DbEntityModel {
 
+	/**
+	 * 
+	 * @return Game
+	 */
 	public static function fromPost() {
 		return self::createInstance(self::class);
 	}

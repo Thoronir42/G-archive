@@ -79,9 +79,9 @@ class PDOwrapper{
 			packing_state = :packing_state,
 			completion = :completion,
 			affection = :affection
-				WHERE game_id = :game_id");
+				WHERE id_game = :id_game");
 		$result = $statement->execute($params);
-		echo $result;
+		return $result;
 	}
 	
 	public function insertImage($params){
