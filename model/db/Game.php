@@ -9,6 +9,11 @@ namespace model\db;
  */
 class Game extends DbEntityModel {
 
+	public static function fromPost() {
+		return self::createInstance(self::class);
+	}
+	
+	
 	var $id_game;
 	var $name;
 	var $cartridge_state;
@@ -17,29 +22,11 @@ class Game extends DbEntityModel {
 	var $completion;
 	var $affection;
 
-	public static function fromPost() {
-		$instance = new Game();
-
-		$rc = new \ReflectionClass(self::class);
-		$fields = $rc->getProperties();
-		foreach ($fields as $field) {
-			$fName = $field->getName();
-			$instance->$fName = filter_input(INPUT_POST, $fName);
-		}
-		return $instance;
-	}
-
-	public function toArray() {
-		$return = [];
-		$rc = new \ReflectionClass(self::class);
-		$fields = $rc->getProperties();
-		foreach ($fields as $field) {
-			$fName = $field->getName();
-			$return[$fName] = $this->$fName;
-		}
-		return $return;
-	}
 	
+
+	public function __construct() {
+		parent::__construct();
+	}
 	
 	public function getCompletionPct(){
 		return $this->completion * \config\GameParams::COMPLETION_FIX;
@@ -48,4 +35,9 @@ class Game extends DbEntityModel {
 	public function getCompletionVal(){
 		return $this->completion * \config\GameParams::COMPLETION_RANGE_ACCURACY;
 	}
+	
+	public function toArray($includeMisc = false) {
+		return $this->createArray($includeMisc, self::class);
+	}
+	
 }

@@ -55,7 +55,6 @@ class PDOwrapper{
 		}
 		$statement = $this->connection->prepare("SELECT * FROM game
 				WHERE id_game = $id");
-		echo $statement->queryString."\n";
 		if(!$statement->execute()){
 			return false;
 		} 

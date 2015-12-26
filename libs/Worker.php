@@ -12,9 +12,10 @@ use config\GameParams;
 class Worker {
 
 	const DEF_ACTION = "vypis";
-	const GAME_COLS = 4;	// Musí být dělitel 12
-	
+	const GAME_COLS = 4; // Musí být dělitel 12
+
 	/** @var URLgen */
+
 	var $URLgen;
 
 	/** @var PDOwrapper */
@@ -88,17 +89,6 @@ class Worker {
 		return ['count' => $colCount, 'list' => $columns];
 	}
 
-	/**
-	 * 
-	 * @param \Model\VGame $game
-	 * @return \Model\VGame
-	 */
-	private function verifyProperties($game) {
-
-		$game->completion *= GameParams::COMPLETION_RANGE_ACCURACY;
-		return $game;
-	}
-
 	public function renderVlozeni() {
 		$this->template['css'][] = "input-file.css";
 		$this->template['js'][] = "input-file.js";
@@ -162,10 +152,10 @@ class Worker {
 
 	/**
 	 * Reads game info from post and returns it's instance
-	 * @return \Model\Game 
+	 * @return \Model\db\Game 
 	 */
 	private function prepareGameAsArray($id_picture = null) {
-		$game = \Model\Game::fromPost()->toArray();
+		$game = \model\db\Game::fromPost()->toArray();
 		if (!$id_picture) {
 			$game['picture'] = $id_picture;
 			unset($game['id_game']);
@@ -180,8 +170,8 @@ class Worker {
 	}
 
 	public function redirect($action) {
-		$location = $this->URLgen->getUrl(["action" => $action], false);
-		\header("Location: /$location");
+		$location = $this->URLgen->url(["action" => $action], false);
+		\header("Location: $location");
 		\header("Connection: close");
 	}
 
