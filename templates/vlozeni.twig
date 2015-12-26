@@ -3,28 +3,57 @@
 
 {% block bodyContent %}
 	<h1>{{ subtitle }}</h1>
-	<form action="{{ formAction }}" class="" method="post" enctype="multipart/form-data">
-		<fieldset class="form-group" name="std"><legend>Základní</legend>
-			<div class="row">
-				<div class="col-xs-6">
-			<label class="control-label" for="name">Název</label>
-			<input class="form-control" type="text" name="name" value="{{ default.name}}">
-				</div>
-				<div class="col-xs-6">
-					<label class="control-label" for="picture">Titulní obrázek</label>
-					<div class="input-group">
-						<span class="input-group-btn">
-							<span class="btn btn-default btn-file">
-								Procházet… <input type="file" name="picture">
+	<form action="{{ formAction }}" class="form-horizontal" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="id_game" value="{{ default.id_game }}">
+		<fieldset class="form-group row" name="std"><legend>Základní</legend>
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-6">
+						<label class="control-label" for="name">Název</label>
+						<input class="form-control" type="text" name="name" value="{{ default.name}}">
+					</div>
+					<div class="col-xs-6">
+						<label class="control-label" for="picture">Titulní obrázek</label>
+						<div class="input-group">
+							<span class="input-group-btn">
+								<span class="btn btn-default btn-file">
+									Procházet… <input type="file" name="picture">
+								</span>
 							</span>
-						</span>
-						<input type="text" class="form-control" readonly="">
+							<input type="text" class="form-control" readonly="">
+							<span class="input-group-addon">
+								<input type="radio" name="picture-src" value="upload" {% if default.new %} checked {% endif %} >
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<label for="picture_description">Popis obrázku</label>
+						<input class="form-control" type="text" name="picture_description">
+					</div>
+					<div class="col-xs-4">
+						<label class="control-label" for="picture">Titulní obrázek</label>
+						<div class="input-group"{% if default.new %} disabled{% endif%}>
+							<select class="form-control" {% if pictures is empty %} disabled="true" {% endif %}>
+								{% for pic in pictures %}
+									<option value="{{ pic.id_picture }}">{{ pic.picture_path[:37] }}</option>
+								{% else%}
+									{% if default.new %}
+									<option>Po vytvoření hry zde lze vybrat obrázek</option>
+									{% else%}
+									<option>Pro tuto hru neexistují žádné obrázky</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+							<span class="input-group-addon">
+								<input type="radio" name="picture-src" value="select"
+									   {% if not default.new and not (pictures is empty) %} checked{% else %} disabled="true"{% endif %}>
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>
-				
-			<label for="picture_description">Popis obrázku</label>
-			<input class="form-control" type="text" name="picture_description">
 		</fieldset>
 		<fieldset name="states"><legend>Stavy komponent</legend>
 			<div class="row">
@@ -44,16 +73,24 @@
 		</fieldset>
 		<fieldset name="opinion">
 			<legend>Poznatky</legend>
-			<label class="control-label" for="completion">Dokončení</label>
-			<div class="input-group">
-				<input class="form-control" type="range" name="completion" min="0" max="{{range_accuracy}}" value="{{ default.completion }}">
-				<div class="input-group-addon">
-					30%
+			<div class="row">
+				<div class="col-xs-9">
+					<label class="control-label" for="completion">Dokončení</label>
+					<div class="input-group">
+						<input class="form-control" type="range" name="completion" min="0" max="{{range_accuracy}}" value="{{ default.completionVal }}">
+						<div class="input-group-addon" id="pct">
+							<span class="pct">{{ default.completionPct }}</span>%
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-3">
+					<label class="control-label" for="affection">Obliba</label>
+					<div class="input-group">
+						<div class="input-group-addon">1</div>
+						<input class="form-control" type="number" name="affection" min="1" max="{{max_affection}}" value="{{ default.affection}}">
+						<div class="input-group-addon">{{ max_affection }}</div>
 				</div>
 			</div>
-			<br/>
-			<label class="control-label" for="affection">Obliba</label>
-			<input class="form-control" type="number" name="affection" min="1" max="{{max_affection}}" value="{{ default.affection}}">
 		</fieldset>
 		
 		<div class="row">

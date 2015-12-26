@@ -102,20 +102,25 @@ class Worker {
 	public function renderVlozeni() {
 		$this->template['css'][] = "input-file.css";
 		$this->template['js'][] = "input-file.js";
+		$this->template['js'][] = 'vlozeni.js';
+		$this->template['css'][] = 'vlozeni.css';
 		$id = filter_input(INPUT_GET, "id");
 		$uprava = isset($id);
 
-		$game = $uprava ? $this->pdoWrapper->fetchGame($id) : \model\db\Game::fromPost();
+		if ($uprava) {
+			$game = $this->pdoWrapper->fetchGame($id);
+		} else {
+			$game = \model\db\Game::fromPost();
+			$game->new = true;
+		}
 
 		if ($uprava && !$game) {
 			echo "Nebylo mozné načíst hru #$id";
 			return;
 		}
 
-		$game->completion = $game->completion * GameParams::COMPLETION_RANGE_ACCURACY;
-
 		$this->template['default'] = $game;
-
+		$this->template['pictures'] = $this->pdoWrapper->getPicturesFor($id);
 
 		$this->template['states'] = $this->pdoWrapper->getStates();
 		$this->template['range_accuracy'] = GameParams::COMPLETION_RANGE_ACCURACY;

@@ -97,5 +97,13 @@ class PDOwrapper{
 		$params = ["id_picture" => $id_picture, "id_game" => $id_game];
 		$statement->execute($params);
 	}
-	
+
+	public function getPicturesFor($id) {
+		$statement = $this->connection->prepare("SELECT * FROM picture WHERE id_game = :id");
+		if($statement->execute(['id' => $id])){
+			return $statement->fetchAll(PDO::FETCH_CLASS, \model\db\Image::class);
+		}
+		return null;
+	}
+
 }
