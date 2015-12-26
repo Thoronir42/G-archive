@@ -40,27 +40,46 @@ class ImageManager {
 	}
 
 	public static function put($sourceKey) {
+		return self::putFile($_FILES[$sourceKey]);
+	}
+	
+	public static function putMany($files){
+		$errors = [];
+		$successes = [];
+		foreach($files as $file){
+			$result = self::putFile($file);
+			if($result['result']){
+				$successes[] = $result['message'];
+			} else {
+				$errors[] = $result['message'];
+			}
+		}
+		return['errors' => $errors, 'successes' => $successes];
+		
+	}
+	
+	private static function putFile($file){
 		// Allow certain file formats
-		$destFile = self::getNonExistingFilename($_FILES[$sourceKey]["name"]);
-		$fileType = self::checkFileType(basename($_FILES[$sourceKey]["name"]));
+		$destFile = self::getNonExistingFilename($file["name"]);
+		$fileType = self::checkFileType(basename($file["name"]));
 		if (!$fileType) {
-			return ['result' => false, 'message' => "Nahraný soubor " . $_FILES[$sourceKey]["name"] . " není jedním z povolených typů: " . implode(", ", self::ALLOWED_FILE_TYPES)];
+			return ['result' => false, 'message' => "Nahraný soubor " . $file["name"] . " není jedním z povolených typů: " . implode(", ", self::ALLOWED_FILE_TYPES)];
 		}
 
 		// Check if image file is a actual image or fake image
-		$check = self::checkImageSize(getimagesize($_FILES["picture"]["tmp_name"]));
+		$check = self::checkImageSize(getimagesize($file["picture"]["tmp_name"]));
 		if ($check) {
 			return $check;
 		}
 
 		// Check file size
-		if (($file_size = $_FILES["picture"]["size"]) > self::MAX_IMG_FILE_SIZE) {
+		if (($file_size = $file["size"]) > self::MAX_IMG_FILE_SIZE) {
 			return ['result' => false, 'message' => "Nahraný obrázek je příliš velký: " . ($file_size / 1024) . "kb"];
 		}
 
 		// if everything is ok, try to upload file
 		$finalFileName = self::IMG_FOLDER . $destFile;
-		if (move_uploaded_file($_FILES[$sourceKey]["tmp_name"], $finalFileName)) {
+		if (move_uploaded_file($file["tmp_name"], $finalFileName)) {
 			return ['result' => true, 'message' => "Obrázek se podařilo nahrát do $finalFileName", 'path' => $finalFileName];
 		} else {
 			return ['result' => false, 'message' => "Nahraný obrázek se nepodařilo přesunout do správné složky"];
@@ -119,4 +138,7 @@ class ImageManager {
 		return $target_file;
 	}
 
+	
+	
+	
 }
