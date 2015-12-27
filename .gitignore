@@ -1,2 +1,4 @@
 config/database*
 nbproject/
+www/img/*
+!www/img/404.png
