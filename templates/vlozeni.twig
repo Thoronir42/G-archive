@@ -12,8 +12,10 @@
 						<label class="control-label" for="name">Název</label>
 						<input class="form-control" type="text" name="name" value="{{ default.name}}">
 					</div>
-					<div class="col-xs-6">
-						<label class="control-label" for="picture">Titulní obrázek</label>
+				</div>
+				<label class="control-label" for="picture">Titulní obrázek</label>
+				<div class="row">
+					<div class="col-xs-7">
 						<div class="input-group">
 							<span class="input-group-btn">
 								<span class="btn btn-default btn-file">
@@ -26,15 +28,12 @@
 							</span>
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-8">
-						<label for="picture_description">Popis obrázku</label>
-						<input class="form-control" type="text" name="picture_description">
-					</div>
-					<div class="col-xs-4">
-						<label class="control-label" for="picture">Titulní obrázek</label>
+					<div class="col-xs-5">
 						<div class="input-group"{% if default.new %} disabled{% endif%}>
+							<span class="input-group-addon">
+								<input type="radio" name="picture-src" value="select"
+									   {% if not default.new and not (pictures is empty) %} checked{% else %} disabled="true"{% endif %}>
+							</span>
 							<select name="imgSelect" class="form-control" {% if pictures is empty %} disabled="true" {% endif %}>
 								{% for pic in pictures %}
 									<option value="{{ pic.id_picture }}">{{ pic.picture_path[:37] }}</option>
@@ -46,10 +45,6 @@
 									{% endif %}
 								{% endfor %}
 							</select>
-							<span class="input-group-addon">
-								<input type="radio" name="picture-src" value="select"
-									   {% if not default.new and not (pictures is empty) %} checked{% else %} disabled="true"{% endif %}>
-							</span>
 						</div>
 					</div>
 				</div>
@@ -95,7 +90,7 @@
 		
 		<div class="row">
 			<div class="col-xs-offset-4 col-xs-4">
-				<input class="form-control btn btn-default" type="submit" value="{{ submitLabel }}" style="width:240px; height:40px">
+				<input class="form-control btn btn-primary" type="submit" value="{{ submitLabel }}" style="width:240px; height:40px">
 			</div>
 		</div>
 	</form>

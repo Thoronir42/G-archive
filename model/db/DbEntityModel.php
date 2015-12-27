@@ -54,7 +54,7 @@ class DbEntityModel {
 	}
 
 	public function toArray($includeMisc = false) {
-		return $this->creaArray();
+		return $this->creaArray($includeMisc);
 	}
 
 	protected function createArray($includeMisc = false, $class = null) {

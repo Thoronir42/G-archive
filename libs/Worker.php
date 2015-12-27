@@ -145,7 +145,7 @@ class Worker {
 
 	public function doUprav() {
 		$game = \model\db\Game::fromPost()->toArray();
-		switch($this->getParam('picture-src', INPUT_POST)){
+		switch ($this->getParam('picture-src', INPUT_POST)) {
 			case 'upload':
 				$p = \model\ImageManager::put("picture");
 				if (!$p['result']) {
@@ -160,7 +160,7 @@ class Worker {
 			case 'select':
 				$game['picture'] = $this->getParam('imgSelect', INPUT_POST);
 				break;
-			default: 
+			default:
 				$game['picture'] = null;
 				break;
 		}
@@ -172,10 +172,10 @@ class Worker {
 	public function renderObrazky() {
 		$this->template['css'][] = "input-file.css";
 		$this->template['js'][] = "input-file.js";
-		
-		
+
+
 		$this->template['formAction'] = ['action' => 'pridejObrazky'];
-		
+
 		$this->template["subtitle"] = "loljk... maby latr. Defintly";
 		$this->template['games'] = $this->pdoWrapper->getGames();
 		
@@ -191,9 +191,9 @@ class Worker {
 		\header("Location: $location");
 		\header("Connection: close");
 	}
-	
-	protected function getParam($name, $method = INPUT_GET){
-		switch($method){
+
+	protected function getParam($name, $method = INPUT_GET) {
+		switch ($method) {
 			default: return null;
 			case INPUT_GET: case INPUT_POST:
 				$field = filter_input($method, $name);
