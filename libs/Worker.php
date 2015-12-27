@@ -200,7 +200,8 @@ class Worker {
 		foreach($result['successes'] as $s){
 			$images[] = ['id_game' => $id_game, 'picture_path' => $s['path']];
 		}
-		echo $this->pdoWrapper->insertImage($images, true);
+		$this->pdoWrapper->insertImage($images, true);
+		$this->redirect("obrazky");
 	}
 
 	public function redirect($action) {
