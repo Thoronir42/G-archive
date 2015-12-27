@@ -3,7 +3,7 @@
 
 {% block bodyContent %}
 	<h1>{{ subtitle }}</h1>
-	<div class="panel panel-default">
+	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<span class="panel-title">Přidání herního obrázku... nebo dvou</span>
 		</div>
@@ -30,10 +30,37 @@
 						</div>
 					</div>
 					<div class="col-xs-2">
-						<input type="submit" class="btn btn-primary form-control" value="Přilepit Špagetty">
+						<input type="submit" class="btn btn-primary form-control" value="Přilepit Špagety">
 					</div>
 				</div>
 			</form>
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="panel-title">Seznam těstovin</span>
+		</div>
+		<div class="panel-body">
+			{% for g in games if g.images is not empty %}
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						{{ g.name }}
+					</div>
+					<div class="panel-body">
+						{% set open_row = false %}
+						{% for i in g.images %}
+							<div class="img-thumbnail" style="height: 140px">
+								{% set picPath = ugen.img(i.picture_path) %}
+								<a href="{{ picPath }}"><img src="{{ picPath }}" class="img-rounded" style="max-height: 100%" ></a>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			{% else %}
+				<div class="jumbotron">
+					<h2>Nejsou vedeny žádné hry anebo u žádné hry není veden jediný obrázek. :(</h2>
+				</div>
+			{% endfor %}
 		</div>
 	</div>
 
