@@ -24,7 +24,7 @@
 							</span>
 							<input type="text" class="form-control" readonly="">
 							<span class="input-group-addon">
-								<input type="radio" name="picture-src" value="upload" {% if default.new %} checked {% endif %} >
+								<input type="radio" name="picture-src" value="upload" {% if default.new or pictures is empty %} checked {% endif %} >
 							</span>
 						</div>
 					</div>

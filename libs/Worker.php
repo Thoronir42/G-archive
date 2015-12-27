@@ -152,8 +152,7 @@ class Worker {
 					echo "Chyba při nahrávání obrázku";
 					break;
 				}
-				$pic = ["picture_path" => $picture_path,
-					"description" => filter_input(INPUT_POST, "picture_description"),
+				$pic = ["picture_path" => $p['path'],
 					"id_game" => $game['id_game']];
 				$game['picture'] = $this->pdoWrapper->insertImage($pic);
 				break;
@@ -165,7 +164,7 @@ class Worker {
 				break;
 		}
 		$game['completion'] = $game['completion'] * 1.0 / GameParams::COMPLETION_RANGE_ACCURACY;
-		$this->pdoWrapper->editGame($game);
+		echo $this->pdoWrapper->editGame($game);
 		$this->redirect("vypis");
 	}
 
