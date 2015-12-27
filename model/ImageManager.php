@@ -60,6 +60,10 @@ class ImageManager {
 	}
 	
 	private static function putFile($file){
+		if($file['error']){
+			return ['result' => false, 'message' => "Při nahrávání obrázku $file[name] nastala chyba $file[error]"];
+		}
+		
 		// Allow certain file formats
 		$destFile = self::getNonExistingFilename($file["name"]);
 		$fileType = self::checkFileType(basename($file["name"]));
@@ -90,7 +94,8 @@ class ImageManager {
 	}
 
 	private static function checkFileType($file) {
-		$imageFileType = pathinfo($file, PATHINFO_EXTENSION);
+		$imageFileType = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+		
 		foreach (self::ALLOWED_FILE_TYPES as $ft) {
 			if ($imageFileType == $ft) {
 				return $ft;
