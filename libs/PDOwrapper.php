@@ -1,30 +1,29 @@
 <?php
+
 namespace libs;
 
 use PDO,
-		model\db\Game,
-		model\db\VGame,
-		model\db\State;
+	model\db\Image,
+	model\db\Game,
+	model\db\VGame,
+	model\db\State;
 
+class PDOwrapper {
 
-class PDOwrapper{
-    /** @var PDO */
-    private $connection;
-    
+	/** @var PDO */
+	private $connection;
+
 	/**
 	 * 
 	 * @param array $cfg
 	 * @return \PDOwrapper
 	 */
-    public static function getConnection($cfg){
-        $cfg['password'] = isset($cfg['password']) ? $cfg['password'] : null;
-        $pdo = new PDO("mysql:host=$cfg[host];dbname=$cfg[db_name];charset=utf8",
-				$cfg['user'],
-				$cfg['password'],
-				 array());
+	public static function getConnection($cfg) {
+		$cfg['password'] = isset($cfg['password']) ? $cfg['password'] : null;
+		$pdo = new PDO("mysql:host=$cfg[host];dbname=$cfg[db_name];charset=utf8", $cfg['user'], $cfg['password'], array());
 		return new PDOwrapper($pdo);
-    }
-	
+	}
+
 	/**
 	 * 
 	 * @param PDO $pdo
@@ -32,49 +31,59 @@ class PDOwrapper{
 	private function __construct($pdo) {
 		$this->connection = $pdo;
 	}
-	
+
 	/**
 	 * 
 	 * @return VGame[]
 	 */
-	public function getGames(){
+	public function getGames() {
 		$result = $this->connection->query("SELECT * FROM games_human")
 				->fetchAll(PDO::FETCH_CLASS, VGame::class);
 		return $result;
 	}
-	
-	public function getStates(){
+
+	public function getStates() {
 		$result = $this->connection->query("SELECT * FROM state ORDER BY freshness DESC")
 				->fetchAll(PDO::FETCH_CLASS, State::class);
 		return $result;
 	}
-	
+
+	/**
+	 * 
+	 * @return Image[]
+	 */
+	public function getImages() {
+		$result = $this->connection->query("SELECT * FROM picture ORDER BY id_game DESC")
+				->fetchAll(PDO::FETCH_CLASS, Image::class);
+		return $result;
+	}
+
 	/**
 	 * 
 	 * @return VGame
 	 */
-	public function fetchGame($id){
-		if(!is_numeric($id)){
+	public function fetchGame($id) {
+		if (!is_numeric($id)) {
 			return false;
 		}
 		$statement = $this->connection->prepare("SELECT * FROM game
 				WHERE id_game = $id");
-		if(!$statement->execute()){
+		if (!$statement->execute()) {
 			return false;
-		} 
+		}
 		$result = $statement->fetchObject(Game::class);
-		
+
 		return $result;
 	}
-	
-	public function insertGame($params){
+
+	public function insertGame($params) {
 		$statement = $this->connection->prepare("INSERT INTO game(name, picture, cartridge_state, manual_state, packing_state, completion, affection)
     VALUES(:name, :picture, :cartridge_state, :manual_state, :packing_state, :completion, :affection)");
 		$result = $statement->execute($params);
 		return $result;
 	}
-	
-	public function editGame($params){
+
+	public function editGame($params) {
 		$statement = $this->connection->prepare("UPDATE game SET 
 			name = :name,
 			picture = :picture,
@@ -87,15 +96,31 @@ class PDOwrapper{
 		$result = $statement->execute($params);
 		return $result;
 	}
-	
-	public function insertImage($params){
-		$statement = $this->connection->prepare("INSERT INTO picture(id_game, description, picture_path)
-    VALUES(:id_game, :description, :picture_path)");
-		$statement->execute($params);
+
+	public function insertImage($params, $mult = false) {
+		$statement = $this->connection->prepare("INSERT INTO picture ".
+			"(id_game,  picture_path) ".
+	 "VALUES(:id_game, :picture_path)");
+		if($mult){
+			$err = 0;
+			foreach($params as $p){
+				$res = $statement->execute($p);
+				if(!$res){
+					$err++;
+				}
+			}
+		} else {
+			if ($statement->execute($params)) {
+				return $this->connection->lastInsertId("picture");
+			} else{
+				var_dump($statement->errorInfo());
+				return false;
+			}
+		}
 		
-		return $this->connection->lastInsertId("picture");
 	}
-	public function linkPicture($id_picture, $id_game){
+
+	public function linkPicture($id_picture, $id_game) {
 		$statement = $this->connection->prepare("UPDATE `g-archive`.`picture` SET `id_game` = :id_game WHERE `picture`.`id_picture` = :id_picture;");
 		$params = ["id_picture" => $id_picture, "id_game" => $id_game];
 		$statement->execute($params);
@@ -103,7 +128,7 @@ class PDOwrapper{
 
 	public function getPicturesFor($id) {
 		$statement = $this->connection->prepare("SELECT * FROM picture WHERE id_game = :id");
-		if($statement->execute(['id' => $id])){
+		if ($statement->execute(['id' => $id])) {
 			return $statement->fetchAll(PDO::FETCH_CLASS, \model\db\Image::class);
 		}
 		return null;

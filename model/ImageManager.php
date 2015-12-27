@@ -49,7 +49,8 @@ class ImageManager {
 		foreach($files as $file){
 			$result = self::putFile($file);
 			if($result['result']){
-				$successes[] = $result['message'];
+				unset($result['result']);
+				$successes[] = $result;
 			} else {
 				$errors[] = $result['message'];
 			}
@@ -67,7 +68,7 @@ class ImageManager {
 		}
 
 		// Check if image file is a actual image or fake image
-		$check = self::checkImageSize(getimagesize($file["picture"]["tmp_name"]));
+		$check = self::checkImageSize(getimagesize($file["tmp_name"]));
 		if ($check) {
 			return $check;
 		}
@@ -80,7 +81,7 @@ class ImageManager {
 		// if everything is ok, try to upload file
 		$finalFileName = self::IMG_FOLDER . $destFile;
 		if (move_uploaded_file($file["tmp_name"], $finalFileName)) {
-			return ['result' => true, 'message' => "Obrázek se podařilo nahrát do $finalFileName", 'path' => $finalFileName];
+			return ['result' => true, 'message' => "Obrázek se podařilo nahrát jako $destFile", 'path' => $destFile];
 		} else {
 			return ['result' => false, 'message' => "Nahraný obrázek se nepodařilo přesunout do správné složky"];
 		}

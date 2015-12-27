@@ -177,13 +177,30 @@ class Worker {
 		$this->template['formAction'] = ['action' => 'pridejObrazky'];
 
 		$this->template["subtitle"] = "loljk... maby latr. Defintly";
-		$this->template['games'] = $this->pdoWrapper->getGames();
-		
+
+		$images = $this->pdoWrapper->getImages();
+		$gamesFetch = $this->pdoWrapper->getGames();
+
+		$games = [];
+
+		foreach ($gamesFetch as $g) {
+			$games[$g->id_game] = $g;
+		}
+		foreach ($images as $i) {
+			$games[$i->id_game]->addImage($i);
+		}
+		$this->template['games'] = $games;
 	}
-	
-	public function doPridejObrazky(){
-		var_dump($_FILES);
-		die;
+
+	public function doPridejObrazky() {
+		$id_game = $this->getParam("id_game", INPUT_POST);
+		$files = \model\FileManager::reArrayFiles($_FILES['picture']);
+		$result = \model\ImageManager::putMany($files);
+		$images = [];
+		foreach($result['successes'] as $s){
+			$images[] = ['id_game' => $id_game, 'picture_path' => $s['path']];
+		}
+		echo $this->pdoWrapper->insertImage($images, true);
 	}
 
 	public function redirect($action) {
