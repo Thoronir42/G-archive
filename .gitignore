@@ -1,4 +1,10 @@
-config/database*
-nbproject/
-www/img/*
-!www/img/404.png
+.idea
+
+log/*
+temp/*
+vendor/*
+!.gitignore
+!.htaccess
+!web.config
+app/config/config.local.neon
+app/config/users.neon

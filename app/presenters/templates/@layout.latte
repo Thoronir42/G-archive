@@ -1,0 +1,59 @@
+{**
+ * @param string   $basePath web base path
+ * @param array    $flashes  flash messages
+ *}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>{ifset title}{include title|striptags} | {/ifset}G-archive</title>
+
+	<link rel="stylesheet" href="{$basePath}/css/bootstrap.css">
+	<link rel="stylesheet" href="{$basePath}/css/input-file.css">
+	<link rel="stylesheet" href="{$basePath}/css/style.css">
+
+	{block style}{/block}
+
+	<meta name="viewport" content="width=device-width">
+	{block head}{/block}
+</head>
+
+<body>
+	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+
+	<body>
+		<div class="row" style="margin-top: 20px">
+			<div class="col-xs-offset-1 col-xs-9">
+				<div id="headder">
+					G archiv
+				</div>
+			</div>
+		</div>
+		<div id="body-container" class="row">
+			<div id="navMenu" class="col-xs-offset-1 col-xs-2">
+				<ul class="list-group">
+					{foreach $menu as $nav}
+						{dump $nav}
+						{var $link = $presenter->link($nav['code'])}
+						<li class="list-group-item{ifCurrent} active{/ifCurrent}">
+							<a href="{$link}">{$nav['title']}</a>
+						</li>
+					{/foreach}
+				</ul>
+			</div>
+
+			<div id="body-content" class="col-xs-8 well">
+				{include #content}
+			</div>
+		</div>
+	</body>
+
+	{block scripts}
+	<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+	<script src="https://nette.github.io/resources/js/netteForms.min.js"></script>
+	<script src="{$basePath}/js/main.js"></script>
+		<script src="{$basePath}/js/input-file.js"></script>
+	{/block}
+</body>
+</html>

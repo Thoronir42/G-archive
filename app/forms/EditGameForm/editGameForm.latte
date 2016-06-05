@@ -1,0 +1,83 @@
+{form form, class => "form->horizontal"}
+    <fieldset class="form-group" name="std"><legend>Základní</legend>
+        <div class="row">
+            <div class="col-xs-6">
+                {label name, class => "control-label" /}
+                {input name, class => "form-control"}
+            </div>
+            <div class="col-xs-12">
+                {label picture, class => 'control-label'/}
+            </div>
+
+            <div class="col-xs-7">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <label n:name="picture" class="btn btn-primary btn-file">
+                            Procházet… <input n:name="picture">
+                        </label>
+                    </span>
+                    <span class="form-control form-control-static">Tady může být oprásek.</span>
+                    <span class="input-group-addon">
+                        <input n:name="picture_src:upload">
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-5">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input n:name="picture_src:select">
+                    </span>
+                    {input img_select, class => "form-control"}
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset name="states" class="form-group"><legend>Stavy komponent</legend>
+        <div class="row">
+            <div class="col-sm-4">
+                {label cartridge_state, class => "control-label" /}
+                {input cartridge_state, class => "form-control"}
+            </div>
+            <div class="col-sm-4">
+                {label packing_state, class => "control-label" /}
+                {input packing_state, class => "form-control"}
+            </div>
+            <div class="col-sm-4">
+                {label manual_state, class => "control-label" /}
+                {input manual_state, class => "form-control"}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset name="opinion">
+        <legend>Poznatky</legend>
+        <div class="row">
+            <div class="col-xs-9">
+                {label completion, class => 'control-label' /}
+                <div class="input-group">
+                    <input class="form-control" type="range" n:name="completion" min="0" max="{$range_accuracy}">
+                    <div class="input-group-addon" id="pct">
+                        <span class="pct">wow</span>%
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                {label affection, class => 'control-label' /}
+                <div class="input-group">
+                    <div class="input-group-addon">1</div>
+                    <input class="form-control" type="number" n:name="affection" min="1" max="{$max_affection}">
+                    <div class="input-group-addon">{$max_affection}</div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset><legend>Hotovo?</legend>
+        <div class="row">
+            <div class="col-xs-offset-4 col-xs-4">
+                {input save, class=>"form-control btn btn-primary", style => "width:240px; height:40px"}
+            </div>
+        </div>
+    </fieldset>
+
+
+    {input id}
+{/form}

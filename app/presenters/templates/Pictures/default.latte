@@ -1,0 +1,39 @@
+{block content}
+	<h1>{$subtitle}</h1>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="panel-title">Přidání herního obrázku... nebo dvou</span>
+		</div>
+		<div class="panel-body">
+			{control addPictureForm}
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="panel-title">Seznam těstovin</span>
+		</div>
+		<div class="panel-body">
+			{if empty($games)}
+				<div class="jumbotron">
+					<h2>Nejsou vedeny žádné hry anebo u žádné hry není veden jediný obrázek. :(</h2>
+				</div>
+			{else}
+				<div class="panel panel-default" n:foreach="$games as $game">
+					<div class="panel-heading">
+						{$game->name}
+					</div>
+					<div class="panel-body">
+						<div n:foreach="$game->pictures as  $picture" class="img-thumbnail" style="height: 140px">
+							{var $picPath = $basePath . '/' . $picture->path}
+							<a href="{$picPath}">
+								<img src="{$picPath}" class="img-rounded" style="max-height: 100%" >
+							</a>
+						</div>
+					</div>
+				</div>
+			{/if}
+
+		</div>
+	</div>
+
+{/block}

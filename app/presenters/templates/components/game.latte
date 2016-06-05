@@ -1,0 +1,35 @@
+<div class="game panel panel-default" id="g{$g->id}">
+    <div class="gameTitle panel-heading"><span>{$g->name}</span></div>
+    <div class="panel-body">
+        <div class="frame">
+            {include '../components/nullablePicture.latte', 'picture' => $g->picture}
+        </div>
+
+        <ul class='list-group'>
+            <li class="list-group-item gr">
+                Rating: {$g->affection}/{$max_affection}
+                <br/><br/>
+                <div class='progress'>
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+                         aria-valuemin="0" aria-valuemax="100" style="width:{{ g.completionPct }}%">
+                        <span>{$g->completionPct}%</span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <div class='gs cartridge'>CTG: {$g->cartridge_state}</div>
+                <div class="gs packing">PCK: {$g->packing_state}</div>
+                <div class="gs cartridge">MAN: {$g->manual_state}</div>
+            </li>
+            <li class='list-group-item buttons'>
+				<span class='btn-group btn-group-justified'>
+                    <a n:href="edit $g->id" class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></a>
+					<a n:href="delete $g->id" class='btn btn-default'><span class='glyphicon glyphicon-remove'></span></a>
+				</span>
+            </li>
+        </ul>
+
+
+    </div>
+</div>

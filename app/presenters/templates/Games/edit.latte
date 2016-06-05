@@ -1,0 +1,28 @@
+{define #style}{include #parent}
+    <link rel="stylesheet" href="{$basePath}/css/game_edit.css">
+    <link rel="stylesheet" href="{$basePath}/css/input-file.css">
+{/define}
+
+{block content}
+<h1>{$subtitle}</h1>
+{control editGameForm}
+
+
+{/block}
+
+{block scripts}{include #parent}
+<script>
+    $(document).ready(function(){
+        var $input = $("input[type=range]");
+        var max = max = $input.attr('max') * 1.0;
+        $input.change(function(){
+
+            var val = $input.val();
+
+            var pct = Math.round(val * 1.0 * 100) / max;
+            $input.parent('.input-group').find('.pct').html(pct);
+        });
+        $input.change();
+    });
+</script>
+{/block}

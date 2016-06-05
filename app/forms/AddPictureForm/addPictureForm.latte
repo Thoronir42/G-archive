@@ -1,0 +1,20 @@
+{form form}
+    <div class="row">
+        <div class="col-xs-2">
+            {input id_game, class => "form-control"}
+        </div>
+        <div class="col-xs-8">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-default btn-file">
+                        Procházet… <input n:name="pictures" data-count="{$file_limit}">
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly="">
+            </div>
+        </div>
+        <div class="col-xs-2">
+            {input save, class => "btn btn-primary"}
+        </div>
+    </div>
+{/form}

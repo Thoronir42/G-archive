@@ -1,0 +1,8 @@
+{*
+    @param picture
+*}
+{if $picture}
+    <img src="{$picture->path}" alt="{$picture->description}">
+{else}
+    <img src="{$basePath}/images/{$picture->path}" alt="{$picture->description}">
+{/if}

@@ -1,0 +1,20 @@
+{var $columns = []}
+{for $i = 0; $i < $column_count; $i++}
+    {var $columns[$i] = []}
+{/for}
+{var $i = 0;}
+{foreach $games as $game}
+    {var $columns[$i][] = $game}
+    {var $i = ($i + 1) % $column_count}
+{/foreach}
+
+{block content}
+    <h1>Vypis her</h1>
+    <div class="gameList row">
+        {foreach $columns as $column}
+            <div n:foreach="$column as $game" class="col-xs-{12 / columns['count']}">
+                {include 'mini/game.twig', 'game' => $game}
+            </div>
+        {/foreach}
+    </div>
+{/block}
