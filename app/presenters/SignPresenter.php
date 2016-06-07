@@ -3,12 +3,12 @@
 namespace App\Presenters;
 
 use Nette;
-use App\Forms\SignFormFactory;
+use App\Forms\ISignInFormFactory;
 
 
 class SignPresenter extends BasePresenter
 {
-	/** @var SignFormFactory @inject */
+	/** @var ISignInFormFactory @inject */
 	public $factory;
 
 	public function actionDefault()
@@ -24,7 +24,9 @@ class SignPresenter extends BasePresenter
 
 	public function actionOut()
 	{
-		$this->getUser()->logout();
+		$this->getUser()->logout(true);
+		$this->redirect('Games:');
+
 
 	}
 
@@ -36,9 +38,12 @@ class SignPresenter extends BasePresenter
 	protected function createComponentSignInForm()
 	{
 		$form = $this->factory->create();
-		$form->onSuccess[] = function ($form) {
-			$form->getPresenter()->redirect('Games:');
+		$presenter = $this;
+
+		$form->onSave[] = function ($form) use ($presenter) {
+			$presenter->redirect('Games:');
 		};
+
 		return $form;
 	}
 

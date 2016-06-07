@@ -34,12 +34,20 @@
 			<div id="navMenu" class="col-xs-offset-1 col-xs-2">
 				<ul class="list-group">
 					{foreach $menu as $nav}
-						{dump $nav}
 						{var $link = $presenter->link($nav['code'])}
 						<li class="list-group-item{ifCurrent} active{/ifCurrent}">
 							<a href="{$link}">{$nav['title']}</a>
 						</li>
 					{/foreach}
+				</ul>
+				<ul>
+					<li class="list-group-item">
+						{if $user->isLoggedIn()}
+							<a n:href="Sign:out">Proveď odhlášení ze systému</a>
+						{else}
+							<a n:href="Sign:in">I am _____</a>
+						{/if}
+					</li>
 				</ul>
 			</div>
 
@@ -53,7 +61,7 @@
 	<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 	<script src="https://nette.github.io/resources/js/netteForms.min.js"></script>
 	<script src="{$basePath}/js/main.js"></script>
-		<script src="{$basePath}/js/input-file.js"></script>
+	<script src="{$basePath}/js/input-file.js"></script>
 	{/block}
 </body>
 </html>

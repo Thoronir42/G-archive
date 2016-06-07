@@ -2,48 +2,56 @@
 
 namespace App\Forms;
 
-use Nette;
+use Nette\Application\UI as UI;
+
+
 use Nette\Application\UI\Form;
 use Nette\Security\User;
 
-
-class SignFormFactory extends Nette\Object
+class SignInForm extends UI\Control
 {
+
+	public $onSave = [];
+
 	/** @var FormFactory */
 	private $factory;
 
 	/** @var User */
 	private $user;
 
+
 	public function __construct(FormFactory $factory, User $user)
 	{
+		parent::__construct();
 		$this->factory = $factory;
 		$this->user = $user;
 	}
 
+	public function render()
+	{
+		$this->template->setFile(__DIR__ . '/signInForm.latte');
+		$this->template->render();
+	}
 
-	/**
-	 * @return Form
-	 */
-	public function create()
+	public function createComponentForm()
 	{
 		$form = $this->factory->create();
-		$form->addText('username', 'Username:')
-			->setRequired('Please enter your username.');
+		$form->addText('username', 'Steel?')
+			->setRequired('Steel steel steel steel Steel:');
 
-		$form->addPassword('password', 'Password:')
-			->setRequired('Please enter your password.');
+		$form->addPassword('password', 'Steel?#|@')
+			->setRequired('Steel steel.');
 
-		$form->addCheckbox('remember', 'Keep me signed in');
+		$form->addCheckbox('remember', 'Steeeeeeeeeeeel');
 
-		$form->addSubmit('send', 'Sign in');
+		$form->addSubmit('send', 'Steel');
 
-		$form->onSuccess[] = array($this, 'formSucceeded');
+		$form->onSuccess[] = $this->processForm;
 		return $form;
 	}
 
 
-	public function formSucceeded(Form $form, $values)
+	public function processForm(Form $form, $values)
 	{
 		if ($values->remember) {
 			$this->user->setExpiration('14 days', FALSE);
@@ -57,6 +65,7 @@ class SignFormFactory extends Nette\Object
 		} catch (Nette\Security\AuthenticationException $e) {
 			$form->addError($this->errorMessage());
 		}
+		$this->onSave($this);
 	}
 
 	private function errorMessage(){
@@ -83,5 +92,10 @@ class SignFormFactory extends Nette\Object
 		}
 		$_SESSION['login_error_count'] = $n;
 	}
+}
 
+interface ISignInFormFactory
+{
+	/** @return SignInForm */
+	function create();
 }

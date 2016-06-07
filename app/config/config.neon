@@ -31,7 +31,7 @@ services:
 	- App\Libs\Initialiser
 
 	- App\Forms\FormFactory
-	- App\Forms\SignFormFactory
+	- App\Forms\ISignInFormFactory
 	- App\Forms\IEditGameFormFactory
 	- App\Forms\IAddPictureFormFactory
 
