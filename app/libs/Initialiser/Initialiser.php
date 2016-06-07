@@ -11,25 +11,62 @@ namespace App\Libs;
 
 use App\Model\Services\States;
 use App\Model\State;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Kdyby\Console\StringOutput;
+use Kdyby\Doctrine\Console\SchemaUpdateCommand;
+use Kdyby\Doctrine\EntityManager;
+use Nette\DI\Container;
+use Nette\DI\Extensions\InjectExtension;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Input\ArrayInput;
 
 class Initialiser
 {
 	/** @var States  */
-	public $states;
+	private $states;
+
+	/** @var SchemaUpdateCommand  */
+	private $schemaUpdateCommand;
 
 	/** @var string[]  */
 	public $messages;
-	
-	public function __construct(States $states)
+	/**
+	 * @var EntityManager
+	 */
+	private $em;
+	/**
+	 * @var Container
+	 */
+	private $context;
+
+
+	public function __construct(States $states, SchemaUpdateCommand $schemaUpdateCommand, EntityManager $em, Container $context)
 	{
 		$this->states = $states;
 		$this->messages = [];
+		$this->schemaUpdateCommand = $schemaUpdateCommand;
+		$this->em = $em;
+		$this->context = $context;
 	}
 
 	public function initialise()
 	{
+		$this->initialiseSchema();
 		$this->initialiseStates();
 	}
+
+	private function initialiseSchema()
+	{
+		$input = new ArrayInput(array('--force' => true));
+		$output = new StringOutput();
+
+		InjectExtension::callInjects($this->context, $this->schemaUpdateCommand);
+		$this->schemaUpdateCommand->setHelperSet(new HelperSet(['em' => new EntityManagerHelper($this->em)]));
+		$this->schemaUpdateCommand->run($input, $output);
+
+		$this->messages[] = $output->getOutput();
+	}
+	
 
 	private function initialiseStates(){
 		$i = 0;

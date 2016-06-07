@@ -1,1 +1,19 @@
 {block content}
+
+<h1>Steel control panel</h1>
+
+<ul class="list-group init-list">
+    <li class="list-group-item list-group-item-danger">
+        <a n:href="initialise">Inicializace databáze</a>
+    </li>
+</ul>
+
+
+
+{block style}{include #parent}
+<style>
+    .init-list a{
+        display: block;
+    }
+</style>
+{/block}

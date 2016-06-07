@@ -6,5 +6,6 @@ vendor/*
 !.gitignore
 !.htaccess
 !web.config
+www/images/games/*
 app/config/config.local.neon
 app/config/users.neon

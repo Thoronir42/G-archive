@@ -44,8 +44,12 @@ class SteelPresenter extends BasePresenter
 
 	public function actionInitialise(){
 		$this->initialiser->initialise();
-		
-		
+
+		foreach ($this->initialiser->messages as $message){
+			$this->flashMessage($message);
+		}
+
+		$this->flashMessage("Databáze inicializována (pravděpodobně)");
 		$this->redirect('default');
 	}
 
