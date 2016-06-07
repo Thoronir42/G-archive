@@ -54,5 +54,10 @@ class State extends Doctrine\Entities\BaseEntity
 		$this->label = $label;
 	}
 
+	function __toString()
+	{
+		return "" . $this->label;
+	}
+
 
 }

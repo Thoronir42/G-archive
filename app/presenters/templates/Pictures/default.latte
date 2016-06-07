@@ -1,6 +1,6 @@
 {block content}
 	<h1>{$subtitle}</h1>
-	<div class="panel panel-primary">
+	<div n:if="$user->isLoggedIn()" class="panel panel-primary">
 		<div class="panel-heading">
 			<span class="panel-title">Přidání herního obrázku... nebo dvou</span>
 		</div>
@@ -20,13 +20,15 @@
 			{else}
 				<div class="panel panel-default" n:foreach="$games as $game">
 					<div class="panel-heading">
-						{$game->name}
+						<a n:href="Games:edit $game->id">
+							{$game->name}
+						</a>
 					</div>
-					<div class="panel-body">
-						<div n:foreach="$game->pictures as  $picture" class="img-thumbnail" style="height: 140px">
-							{var $picPath = $basePath . '/' . $picture->path}
-							<a href="{$picPath}">
-								<img src="{$picPath}" class="img-rounded" style="max-height: 100%" >
+					<div class="panel-body text-center">
+						<div n:foreach="$game->pictures as  $picture" n:class="img-thumbnail, $picture->isPrimary()?primary-picture">
+							{include '../components/nullablePicture.latte', picture => $picture, imgClass => 'img-rounded'}
+							<a n:href="delete! $picture->id" class="delete-mark ajax">
+								<span class="glyphicon glyphicon-trash"></span>
 							</a>
 						</div>
 					</div>

@@ -2,9 +2,12 @@
 
 namespace App\Forms;
 
+use App\Libs\ImageManager;
+use App\Model\Picture;
 use App\Model\Services\Games;
 use Nette\Application\UI as UI;
-use Nette\Forms\Form;
+use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 
 class AddPictureForm extends UI\Control{
 
@@ -15,12 +18,17 @@ class AddPictureForm extends UI\Control{
 
 	private $file_limit;
 
+	/** @var ImageManager */
+	private $imageManager;
 
-	public function __construct(Games $games)
+
+	public function __construct(Games $games, ImageManager $imageManager)
 	{
 		parent::__construct();
-		$this->games = $games;
 		$this->file_limit = 2;
+
+		$this->games = $games;
+		$this->imageManager = $imageManager;
 	}
 
 	public function render()
@@ -34,7 +42,7 @@ class AddPictureForm extends UI\Control{
 	{
 		$form = new Form;
 
-		$form->addSelect('id_game', 'Výběr hry', $this->games->findPairs('name'))->setPrompt('Nespojovat s žádnou hrou.');
+		$form->addSelect('id_game', 'Výběr hry', $this->games->findPairs('name'))->setPrompt('Spojit s hrou...')->setDisabled(['']);
 
 		$form->addMultiUpload('pictures');
 
@@ -48,8 +56,29 @@ class AddPictureForm extends UI\Control{
 
 	public function processForm(Form $form, $values)
 	{
+		$game = $this->games->find($values['id_game']);
+		if(!$game){
+			$form['id_game']->addError("Hra nebyla nalezena");
+			return;
+		}
+		$pictures = [];
 
-		$this->onSave($this);
+
+		/** @var FileUpload $upload */
+		foreach ($values['pictures'] as $upload){
+			$path = $this->imageManager->put($upload);
+			if(!$path){
+				$form->addError("Obrázek $upload->name se nepodařilo nahrát");
+				continue;
+			}
+			$picture = new Picture();
+			$picture->path = $path;
+			$picture->game = $game;
+
+			$pictures[] = $picture;
+		}
+
+		$this->onSave($form, $pictures, $game);
 	}
 }
 

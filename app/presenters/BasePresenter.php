@@ -21,6 +21,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		parent::startup();
 
 		$this->template->max_affection = $this->gameParams->getMaxRating();
+		$this->template->image_dir = __DIR__ . '/../../www/images/games/';
 		$this->template->menu = $this->buildMenu();
 	}
 

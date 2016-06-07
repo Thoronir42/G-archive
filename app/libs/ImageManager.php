@@ -126,7 +126,7 @@ class ImageManager {
 		return false;
 	}
 
-	public function uniqueFilename($target_file) {
+	private function uniqueFilename($target_file) {
 		if (file_exists($this->imgFolder . $target_file)) {
 			$renameAttempt = 0;
 			$parts = explode('.', $target_file);
@@ -147,6 +147,10 @@ class ImageManager {
 	public function getErrors(){
 		return $this->errors;
 	}
-	
-	
+
+	public function delete($path){
+		unlink($this->imgFolder . $path);
+	}
+
+
 }
