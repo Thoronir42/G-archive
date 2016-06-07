@@ -6,6 +6,7 @@ use App\Libs\GASettings;
 use App\Libs\ImageManager;
 use App\Model\Game;
 use App\Model\Picture;
+use App\Model\Services\Games;
 use App\Model\Services\States;
 use Components\EntityForm;
 use Nette\Application\UI as UI;
@@ -32,18 +33,30 @@ class EditGameForm extends UI\Control
 	/** @var ImageManager */
 	private $imageManager;
 
+	/** @var Games */
+	private $games;
 
-	public function __construct(ImageManager $imageManager, States $states, GASettings $game_settings)
+
+	private $game;
+
+
+	public function __construct(ImageManager $imageManager, States $states, GASettings $game_settings, Games $games)
 	{
 		parent::__construct();
 
 		$this->imageManager = $imageManager;
 		$this->states = $states;
 		$this->game_settings = $game_settings;
+
+		$this->games = $games;
 	}
 
 	public function render()
 	{
+		if(!$this->game){
+			$this['form']['picture_select']->setDisabled();
+		}
+
 		$this->template->setFile(__DIR__ . '/editGameForm.latte');
 
 		$this->template->range_accuracy = $this->game_settings->getCompletionRange();
@@ -60,7 +73,8 @@ class EditGameForm extends UI\Control
 		/** @var EntityForm $form */
 		$form = $this['form'];
 
-		$form->bindEntity($game);
+		$form->bindEntity($this->game = $game);
+
 
 		/** @var SelectBox $select */
 		$select = $form['picture_select'];
@@ -72,7 +86,6 @@ class EditGameForm extends UI\Control
 
 		$select->setDisabled(empty($picture_pairs));
 		$select->setItems($picture_pairs);
-		$select->setValue($game->primary_picture->getId());
 
 		/** @var RadioList $radios */
 		$radios = $form['picture_src'];
@@ -80,8 +93,18 @@ class EditGameForm extends UI\Control
 
 		/** @var SubmitButton $submit */
 		$submit = $form['save'];
+		$submit->caption = "Uložit změny";
 
-		$submit->setValue('Upravit');
+		$defaults = [
+			'completion' => $game->completion * $this->game_settings->getCompletionRange(),
+		];
+		if ($game->primary_picture) {
+			$defaults['picture_select'] = $game->primary_picture->getId();
+		}
+		if(!empty($picture_pairs)){
+			$defaults['picture_src'] = self::$PICTURE_SRC_SELECT;
+		}
+		$form->setDefaults($defaults);
 
 	}
 
@@ -90,15 +113,15 @@ class EditGameForm extends UI\Control
 		$states = $this->states->findPairs('label');
 
 		$form = new EntityForm;
+		$form->bindEntity(new Game);
 
 		$form->addText('name', 'Název');
 		$form->addUpload('picture', 'Titulní obrázek');
 
 		$form->addRadioList('picture_src', '',
-			[self::$PICTURE_SRC_UPLOAD => '', self::$PICTURE_SRC_SELECT => ''])
-		->setDisabled([self::$PICTURE_SRC_SELECT]);
+			[self::$PICTURE_SRC_UPLOAD => '', self::$PICTURE_SRC_SELECT => '']);
 
-		$form->addSelect('picture_select', [])->setPrompt("Výběr primárního obrázku")->setDisabled();
+		$form->addSelect('picture_select', [])->setPrompt("Výběr primárního obrázku");
 
 		$form->addSelect('cartridge_state', 'Cartridge', $states);
 		$form->addSelect('packing_state', 'Balení', $states);
@@ -111,7 +134,6 @@ class EditGameForm extends UI\Control
 
 		$form->onSuccess[] = $this->processForm;
 
-		$form->bindEntity(new Game());
 		$form->setDefaults(['picture_src' => 'upload', 'affection' => 10]);
 
 		return $form;
@@ -130,26 +152,34 @@ class EditGameForm extends UI\Control
 		$picture_src = $values['picture_src'];
 		unset($values['picture_src']);
 
-		if($picture_src == self::$PICTURE_SRC_SELECT){
-			$values['primary_picture'] = $values['pic_select'];
-		}
+		$picture_select = $values['picture_select'];
+		unset($values['picture_select']);
 
 		$state_fields = ['cartridge_state', 'packing_state', 'manual_state'];
-		foreach ($state_fields as $field){
+		foreach ($state_fields as $field) {
 			$values[$field] = $this->states->find($values[$field]);
 		}
+
+		$values['completion'] /= $this->game_settings->getCompletionRange();
 
 		foreach ($values as $field => $value) {
 			$game->$field = $value;
 		}
 
 		$path = $this->imageManager->put($picture);
-		if($path){
+		if ($path) {
 			$out_picture = new Picture;
 			$out_picture->game = $game;
 			$out_picture->path = $path;
+			$game->pictures->add($out_picture);
+		} else {
+			$out_picture = null;
 		}
 
+		if ($picture_src == self::$PICTURE_SRC_SELECT) {
+			$out_picture = $picture_select;
+		}
+		
 		$this->onSave($form, $game, $out_picture);
 	}
 }
