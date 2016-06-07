@@ -28,6 +28,7 @@ extensions:
 
 services:
 	- App\Libs\GASettings
+	- App\Libs\ImageManager
 	- App\Libs\Initialiser
 
 	- App\Forms\FormFactory

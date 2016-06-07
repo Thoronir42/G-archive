@@ -12,6 +12,7 @@ use App\Model\Services\Pictures;
 use Components\EntityForm;
 use Nette;
 use App\Model;
+use Nette\Http\FileUpload;
 
 
 class GamesPresenter extends BasePresenter
@@ -51,32 +52,29 @@ class GamesPresenter extends BasePresenter
 
 		if($id){
 			$game = $this->games->find($id);
-			$pictures = $this->pictures->findPairs(['game' => $game], 'description');
-			dump($pictures);
 
 			if (!$game) {
 				$this->flashMessage("Hra č. $id k editaci nebyla nalezena.");
 				$this->redirect("default");
 			}
-			$edit_mode = true;
 
-			$form->setGame($game, $pictures);
+			$subtitle = "Úprava detailů hry $game->name";
+
+			$form->setGame($game);
 		} else {
-			$edit_mode = false;
+			$subtitle = "Vložení nové hry";
 		}
 
-		$this->template->pictures = isset($game) && $game ? $this->pictures->find($game) : [];
-
-		$this->template->range_accuracy = $this->gameParams->getCompletionRange();
-
-		$this->template->submitLabel = $edit_mode ? "Upravit" : "Přidat";
-
-		$this->template->subtitle = $edit_mode ? "Úprava detailů hry $game->name" : "Vložení nové hry";
+		$this->template->subtitle = $subtitle;
 	}
 
 	public function renderAdd(){
 		$this->renderEdit(0);
 		$this->setView('edit');
+	}
+
+	public function actionDelete($id){
+		$this->redirect('default');
 	}
 
 	public function doVloz() {
@@ -108,10 +106,15 @@ class GamesPresenter extends BasePresenter
 		$form = $this->editGameFormFactory->create();
 
 		$form->onSave[] = function (EntityForm $form, Game $game, Picture $picture){
-			dump($form->values);
-			dump($game);
-			dump($picture);
-			exit();
+			if($picture){
+				$game->primary_picture = $picture;
+			}
+			$this->games->save($game, false);
+			$this->pictures->save($picture, false);
+			$this->games->flush();
+
+			$this->flashMessage("Hra $game->name byla úspěšně přidána.");
+			$this->redirect('default');
 		};
 
 		return $form;

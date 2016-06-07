@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Libs;
+use Nette\Http\FileUpload;
 
 /**
  * Description of ImageManager
@@ -9,142 +10,143 @@ namespace App\Libs;
  */
 class ImageManager {
 
-	const IMG_FOLDER = __DIR__ . "/../www/img/";
-	const IMAGE_NOT_FOUND = "404.png";
-	const ALLOWED_FILE_TYPES = ["jpg", "jpeg", "png", "gif"];
+	public static function allowedFileTypes(){
+		return ["jpg", "jpeg", "png", "gif"];
+	}
+
 	const MIN_IMG_SIZE = 150;
 	const MAX_IMG_SIZE = 2000;
 	const MAX_IMG_FILE_SIZE = 12 * 1024 * 1024;
 
-	public static function get($fileName, $extension = null) {
-		if ($fileName == null) {
-			return self::IMAGE_NOT_FOUND;
-		}
-		if (file_exists(self::IMG_FOLDER . $fileName)) {
-			return $fileName;
-		}
-		if ($extension != null) {
-			$fn = "$fileName.$extension";
-			if (file_exists(self::IMG_FOLDER . $fn)) {
-				return $fn;
-			}
-		} else {
-			foreach (self::ALLOWED_FILE_TYPES as $ext) {
-				$fn = "$fileName.$ext";
-				if (file_exists(self::IMG_FOLDER . $fn)) {
-					return $fn;
-				}
-			}
-		}
-		return self::IMAGE_NOT_FOUND;
+	protected $imgFolder;
+
+	private $errors;
+
+	public function __construct()
+	{
+		$this->imgFolder = __DIR__ . "/../../www/images/games/";
+		$this->errors = [];
 	}
 
-	public static function put($sourceKey) {
-		return self::putFile($_FILES[$sourceKey]);
-	}
-	
-	public static function putMany($files){
-		$errors = [];
-		$successes = [];
+	/**
+	 * @param FileUpload[] $files
+	 * @return array
+	 */
+	public function putMany($files){
+		$uploads = [];
 		foreach($files as $file){
-			$result = self::putFile($file);
+			$result = self::put($file);
 			if($result['result']){
 				unset($result['result']);
-				$successes[] = $result;
+				$uploads[] = $result;
 			} else {
-				$errors[] = $result['message'];
+				$this->errors[] = $result['message'];
 			}
 		}
-		return['errors' => $errors, 'successes' => $successes];
-		
+		return $uploads;
+
 	}
-	
-	private static function putFile($file){
-		if($file['error']){
-			return ['result' => false, 'message' => "Při nahrávání obrázku $file[name] nastala chyba $file[error]"];
+
+
+	public function put(FileUpload $file) {
+		if(!$file->ok){
+			$this->errors[] = "Při nahrávání obrázku " . $file->name . " nastala chyba " . $file->error;
+			return false;
 		}
-		
+
 		// Allow certain file formats
-		$destFile = self::getNonExistingFilename($file["name"]);
-		$fileType = self::checkFileType(basename($file["name"]));
+		$fileType = $this->verifyFileType(basename($file->name));
 		if (!$fileType) {
-			return ['result' => false, 'message' => "Nahraný soubor " . $file["name"] . " není jedním z povolených typů: " . implode(", ", self::ALLOWED_FILE_TYPES)];
+			$this->errors[] = "Nahraný soubor " . $file->name . " není jedním z povolených typů: " . implode(", ", self::allowedFileTypes());
+			return false;
 		}
 
 		// Check if image file is a actual image or fake image
-		$check = self::checkImageSize(getimagesize($file["tmp_name"]));
-		if ($check) {
-			return $check;
+		$dimensionErrors = self::checkImageDimensions($file->temporaryFile);
+		if (!empty($dimensionErrors)) {
+			$this->errors = $dimensionErrors;
+			return false;
+
 		}
 
 		// Check file size
-		if (($file_size = $file["size"]) > self::MAX_IMG_FILE_SIZE) {
-			return ['result' => false, 'message' => "Nahraný obrázek je příliš velký: " . ($file_size / 1024) . "kb"];
+		if (($file_size = $file->size) > self::MAX_IMG_FILE_SIZE) {
+			$errors[] =  "Velikost souboru " . ($file_size / 1024) . "kb přesáhla povolený limit " . (self::MAX_IMG_FILE_SIZE/ 1024) . "kb";
+			return false;
 		}
 
 		// if everything is ok, try to upload file
-		$finalFileName = self::IMG_FOLDER . $destFile;
-		if (move_uploaded_file($file["tmp_name"], $finalFileName)) {
-			return ['result' => true, 'message' => "Obrázek se podařilo nahrát jako $destFile", 'path' => $destFile];
-		} else {
-			return ['result' => false, 'message' => "Nahraný obrázek se nepodařilo přesunout do správné složky"];
-		}
+		$destFile = $this->uniqueFilename($file->name);
+		$finalFileName = $this->imgFolder . $destFile;
 
-		return ['result' => false, 'message' => "Při nahrávání souboru nastala neočekávaná chyba"];
+		if(!$file->move($finalFileName)){
+			$errors[] = "Nahraný obrázek se nepodařilo uložit.";
+			return false;
+		}
+		return $destFile;
 	}
 
-	private static function checkFileType($file) {
-		$imageFileType = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-		
-		foreach (self::ALLOWED_FILE_TYPES as $ft) {
-			if ($imageFileType == $ft) {
-				return $ft;
-			}
-		}
-		echo $imageFileType;
-		return false;
-	}
+	//
+	// Various checks
+	//
 
-	private static function checkImageSize($check) {
+	private function checkImageDimensions($tmpName) {
+		$check = getimagesize($tmpName);
 		$w = $check[0];
 		$h = $check[1];
+
+		$errors = [];
 
 		if ($check === false) {
 			return ['result' => false, 'message' => "Nahraný soubor není obrázek"];
 		}
-		if ($w < self::MIN_IMG_SIZE || $h < self::MIN_IMG_SIZE) {
-			return ['result' => false, 'message' => "Nahraný obrázek ($w*$h) musí být po obou rozměrech větší než " . self::MIN_IMG_SIZE . " pixelů"];
+		if($w < self::MIN_IMG_SIZE || $w > self::MAX_IMG_SIZE){
+			$errors[] = "Šířka obrázku musí být větší než ". self::MIN_IMG_SIZE . " a menší než " . self::MAX_IMG_SIZE . " pixelů";
 		}
-		if ($w > self::MAX_IMG_SIZE || $h > self::MAX_IMG_SIZE) {
-			return ['result' => false, 'message' => "Nahraný obrázek ($w*$h) musí být po obou rozměrech menší než " . self::MIN_IMG_SIZE . " pixelů"];
+		if($h < self::MIN_IMG_SIZE || $h > self::MAX_IMG_SIZE){
+			$errors[] = "Výška obrázku musí být větší než ". self::MIN_IMG_SIZE . " a menší než " . self::MAX_IMG_SIZE . " pixelů";
 		}
+
+		return $errors;
+	}
+
+	/**
+	 * @param string $file
+	 * @return bool|string
+	 */
+	private function verifyFileType($file) {
+		$imageFileType = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+		foreach (self::allowedFileTypes() as $ft) {
+			if ($imageFileType == $ft) {
+				return $ft;
+			}
+		}
+
 		return false;
 	}
 
-	private static function deleteIfexists($fileName) {
-		foreach (self::ALLOWED_FILE_TYPES as $ext) {
-			$n = "$fileName.$ext";
-			if (file_exists($n)) {
-				unlink($n);
-			}
-		}
-	}
-
-	public static function getNonExistingFilename($target_file) {
-		if (file_exists(self::IMG_FOLDER . $target_file)) {
+	public function uniqueFilename($target_file) {
+		if (file_exists($this->imgFolder . $target_file)) {
 			$renameAttempt = 0;
 			$parts = explode('.', $target_file);
 			$name = $parts[0];
 			$suffix = $parts[1];
 			do {
 				$reName = $name . ( ++$renameAttempt) . ".$suffix";
-			} while (file_exists(self::IMG_FOLDER . $reName));
+			} while (file_exists($this->imgFolder . $reName));
 			$target_file = $reName;
 		}
 		return $target_file;
 	}
 
-	
+	//
+	//  Accessors
+	//
+
+	public function getErrors(){
+		return $this->errors;
+	}
 	
 	
 }

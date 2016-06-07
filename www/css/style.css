@@ -76,3 +76,12 @@ form .error {
 	color: #D00;
 	font-weight: bold;
 }
+
+.game .frame img{
+	max-width:100%;
+}
+
+
+.img-thumbnail img{
+	max-height:100%;
+}

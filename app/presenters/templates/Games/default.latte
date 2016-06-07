@@ -12,8 +12,8 @@
     <h1>Vypis her</h1>
     <div class="gameList row">
         {foreach $columns as $column}
-            <div n:foreach="$column as $game" class="col-xs-{12 / columns['count']}">
-                {include 'mini/game.twig', 'game' => $game}
+            <div n:foreach="$column as $game" class="col-xs-{12 / $column_count}">
+                {include '../components/game.latte', 'game' => $game}
             </div>
         {/foreach}
     </div>

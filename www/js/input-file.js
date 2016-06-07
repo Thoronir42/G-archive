@@ -8,11 +8,13 @@ $(document).on('change', '.btn-file :file', function() {
 $(document).ready( function() {
     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
         
-        var input = $(this).parents('.input-group').find(':text'),
+        var $label = $(this).parents('.input-group').find('.file-label'),
             log = numFiles > 1 ? numFiles + ' files selected' : label;
-			
-        if( input.length ) {
-            input.val(log);
+
+        console.log($label.text());
+
+        if( $label.length ) {
+            $label.text(log);
         }
     });
 });

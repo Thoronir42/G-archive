@@ -21,7 +21,7 @@ class Picture extends BaseEntity {
 
 	/** @ORM\Column(type="string", length=100) */
 	var $path;
-	/** @ORM\Column(type="string", length=100) */
+	/** @ORM\Column(type="string", length=100, nullable=true) */
 	var $description;
 
 }
