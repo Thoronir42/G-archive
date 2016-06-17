@@ -1,0 +1,17 @@
+services:
+	- App\Libs\GASettings
+	- App\Libs\ImageManager
+	- App\Libs\Initialiser
+
+	- App\Controls\INavigationMenuFactory
+
+	- App\Forms\FormFactory
+	- App\Forms\ISignInFormFactory
+	- App\Forms\IEditGameFormFactory
+	- App\Forms\IAddPictureFormFactory
+
+	- App\Model\Services\Games
+	- App\Model\Services\Pictures
+	- App\Model\Services\States
+
+	router: App\RouterFactory::createRouter

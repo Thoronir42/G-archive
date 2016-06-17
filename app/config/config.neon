@@ -26,23 +26,6 @@ extensions:
     annotations: Kdyby\Annotations\DI\AnnotationsExtension
     doctrine: Kdyby\Doctrine\DI\OrmExtension
 
-services:
-	- App\Libs\GASettings
-	- App\Libs\ImageManager
-	- App\Libs\Initialiser
-
-	- App\Forms\FormFactory
-	- App\Forms\ISignInFormFactory
-	- App\Forms\IEditGameFormFactory
-	- App\Forms\IAddPictureFormFactory
-
-	- App\Model\Services\Games
-	- App\Model\Services\Pictures
-	- App\Model\Services\States
-
-#	- Kdyby\Doctrine\EntityManager
-
-	router: App\RouterFactory::createRouter
-
 includes:
+    - services.neon
     - users.neon

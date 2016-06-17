@@ -11,8 +11,6 @@ $(document).ready( function() {
         var $label = $(this).parents('.input-group').find('.file-label'),
             log = numFiles > 1 ? numFiles + ' files selected' : label;
 
-        console.log($label.text());
-
         if( $label.length ) {
             $label.text(log);
         }

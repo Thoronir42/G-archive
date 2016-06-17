@@ -33,22 +33,16 @@ class EditGameForm extends UI\Control
 	/** @var ImageManager */
 	private $imageManager;
 
-	/** @var Games */
-	private $games;
-
-
 	private $game;
 
 
-	public function __construct(ImageManager $imageManager, States $states, GASettings $game_settings, Games $games)
+	public function __construct(ImageManager $imageManager, States $states, GASettings $game_settings)
 	{
 		parent::__construct();
 
 		$this->imageManager = $imageManager;
 		$this->states = $states;
 		$this->game_settings = $game_settings;
-
-		$this->games = $games;
 	}
 
 	public function render()

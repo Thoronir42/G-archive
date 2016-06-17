@@ -2,7 +2,6 @@
     @param picture
     [ @param imgClass ]
 *}
-{dump }
 {define ifClass}{ifset $imgClass}class="{$imgClass}"{/ifset}{/define}
 
 {if $picture && file_exists($image_dir . $picture->path)}
