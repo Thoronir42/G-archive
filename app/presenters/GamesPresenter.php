@@ -15,7 +15,7 @@ use App\Model;
 
 class GamesPresenter extends BasePresenter
 {
-	const GAME_COLS = 4; // Musí být dělitel 12
+	const GAME_COLS = 3; // Musí být dělitel 12
 
 	/** @var Games @inject  */
 	public $games;
@@ -29,17 +29,13 @@ class GamesPresenter extends BasePresenter
 	public function startup()
 	{
 		parent::startup();
-		$action = $this->getAction();
-		$allowed_actions = ['default'];
-		if(!in_array($action, $allowed_actions) && !$this->user->isLoggedIn()){
-			$this->flashMessage('Jsi opravdu Steel, že chceš upravovat hry?');
-			$this->redirect('default');
-		}
+		$this->steelCheck();
 	}
 
 	public function renderDefault()
 	{
 		$games = $this->games->findAll();
+		$this->template->title  = "Vcesko";
 		$this->template->games = $games;
 		$this->template->column_count = self::GAME_COLS;
 	}
@@ -47,6 +43,7 @@ class GamesPresenter extends BasePresenter
 
 
 	public function actionEdit($id) {
+		/** @var Game $game */
 		$game = $this->games->find($id);
 
 		if (!$game) {
@@ -58,13 +55,13 @@ class GamesPresenter extends BasePresenter
 		$form = $this['editGameForm'];
 		$form->setGame($game);
 
-		$this->template->subtitle = "Úprava detailů hry $game->name";
+		$this->template->title = "Úprava detailů hry $game->name";
 	}
 
 	public function renderAdd(){
 		$this->setView('edit');
 
-		$this->template->subtitle = "Vložení nové hry";
+		$this->template->title = "Vložení nové hry";
 	}
 
 	public function actionDelete($id){
@@ -92,7 +89,7 @@ class GamesPresenter extends BasePresenter
 				$this->pictures->save($picture, false);
 			}
 
-			$this->games->update($game, $game->toArray());
+			$this->games->save($game);
 			$this->flashMessage("Hra $game->name byla úspěšně přidána.");
 			$this->redirect('default');
 		};

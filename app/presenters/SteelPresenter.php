@@ -30,16 +30,11 @@ class SteelPresenter extends BasePresenter
 	public function startup()
 	{
 		parent::startup();
-
-		if(false && !$this->user->isLoggedIn()){
+		if(!$this->user->isLoggedIn()){
 			$this->flashMessage("To access Steel, you must be Steel.");
 			$this->redirect('Games:');
 		}
-	}
-
-	public function renderDefault()
-	{
-
+		$this->template->title = "Steelasdf";
 	}
 
 	public function actionInitialise(){

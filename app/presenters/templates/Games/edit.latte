@@ -4,9 +4,8 @@
 {/define}
 
 {block content}
-<h1>{$subtitle}</h1>
-{control editGameForm}
 
+{control editGameForm}
 
 {/block}
 
@@ -19,7 +18,7 @@
 
             var val = $input.val();
 
-            var pct = Math.round(val * 1.0 * 100) / max;
+            var pct = Math.round(val * 100.0) / max;
             $input.parent('.input-group').find('.pct').html(pct);
         });
         $input.change();

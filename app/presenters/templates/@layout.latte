@@ -5,63 +5,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
 
-	<title>{ifset title}{include title|striptags} | {/ifset}G-archive</title>
+    <title>{ifset title}{include title|striptags} | {/ifset}G-archive</title>
 
-	<link rel="stylesheet" href="{$basePath}/css/bootstrap.css">
-	<link rel="stylesheet" href="{$basePath}/css/input-file.css">
-	<link rel="stylesheet" href="{$basePath}/css/style.css">
+    <link rel="stylesheet" href="{$basePath}/css/bootstrap.css">
+    <link rel="stylesheet" href="{$basePath}/css/input-file.css">
+    <link rel="stylesheet" href="{$basePath}/css/style.css">
 
-	{block style}{/block}
+    {block style}{/block}
 
-	<meta name="viewport" content="width=device-width">
-	{block head}{/block}
+    <meta name="viewport" content="width=device-width">
+    {block head}{/block}
 </head>
 
 <body>
-	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+{control menu:top}
 
-	<body>
-		<div class="row" style="margin-top: 20px">
-			<div class="col-xs-offset-1 col-xs-9">
-				<div id="headder">
-					G archiv
-				</div>
-			</div>
-		</div>
-		<div id="body-container" class="row">
-			<div id="navMenu" class="col-xs-offset-1 col-xs-2">
-				<ul class="list-group">
-					{foreach $menu as $nav}
-						{var $link = $presenter->link($nav['code'])}
-						<li class="list-group-item{ifCurrent} active{/ifCurrent}">
-							<a href="{$link}">{$nav['title']}</a>
-						</li>
-					{/foreach}
-				</ul>
-				<ul>
-					<li class="list-group-item">
-						{if $user->isLoggedIn()}
-							<a n:href="Sign:out">Proveď odhlášení ze systému</a>
-						{else}
-							<a n:href="Sign:in">I am _____</a>
-						{/if}
-					</li>
-				</ul>
-			</div>
+<div class="container">
 
-			<div id="body-content" class="col-xs-8 well">
-				{include #content}
-			</div>
-		</div>
-	</body>
 
-	{block scripts}
-	<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-	<script src="https://nette.github.io/resources/js/netteForms.min.js"></script>
-	<script src="{$basePath}/js/main.js"></script>
-	<script src="{$basePath}/js/input-file.js"></script>
-	{/block}
+    <div class="row" style="margin-top: 40px">
+        <div class="col-sm-offset-1 col-xs-10">
+            <div id="headder">{$title}</div>
+        </div>
+    </div>
+    <div id="body-container" class="row">
+        <div id="body-content" class="col-sm-offset-1 col-xs-10 well">
+            {include 'components/flashes.latte', flashes => $flashes}
+
+            {include #content}
+        </div>
+    </div>
+</div>
+
+{block scripts}
+    <script src="https://nette.github.io/resources/js/netteForms.min.js"></script>
+
+    <script src="{$basePath}/js/jquery-2.1.4.min.js"></script>
+    <script src="{$basePath}/js/bootstrap.js"></script>
+    <script src="{$basePath}/js/bootstrap-confirmation.min.js"></script>
+
+    <script src="{$basePath}/js/main.js"></script>
+    <script src="{$basePath}/js/input-file.js"></script>
+{/block}
 </body>
 </html>

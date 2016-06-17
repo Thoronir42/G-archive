@@ -1,5 +1,4 @@
 {block content}
-	<h1>{$subtitle}</h1>
 	<div n:if="$user->isLoggedIn()" class="panel panel-primary">
 		<div class="panel-heading">
 			<span class="panel-title">Přidání herního obrázku... nebo dvou</span>
@@ -18,7 +17,7 @@
 					<h2>Nejsou vedeny žádné hry anebo u žádné hry není veden jediný obrázek. :(</h2>
 				</div>
 			{else}
-				<div class="panel panel-default" n:foreach="$games as $game">
+				<div class="panel panel-default picture-panel" n:foreach="$games as $game">
 					<div class="panel-heading">
 						<a n:href="Games:edit $game->id">
 							{$game->name}
@@ -27,8 +26,14 @@
 					<div class="panel-body text-center">
 						<div n:foreach="$game->pictures as  $picture" n:class="img-thumbnail, $picture->isPrimary()?primary-picture">
 							{include '../components/nullablePicture.latte', picture => $picture, imgClass => 'img-rounded'}
-							<a n:href="delete! $picture->id" class="delete-mark ajax">
+
+							{var $operable = $user->isLoggedIn() && !$picture->isPrimary()}
+
+							<a n:href="delete! $picture->id" n:if="$operable" class="picture-mark delete-mark ajax" data-toggle="confirmation">
 								<span class="glyphicon glyphicon-trash"></span>
+							</a>
+							<a n:href="select! $picture->id" n:if="$operable" class="picture-mark select-mark ajax">
+								<span class="glyphicon glyphicon-screenshot"></span>
 							</a>
 						</div>
 					</div>

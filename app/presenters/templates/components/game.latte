@@ -23,14 +23,10 @@
                 <div class="gs packing">PCK: {$game->packing_state->label}</div>
                 <div class="gs cartridge">MAN: {$game->manual_state->label}</div>
             </li>
-            <li class='list-group-item buttons'>
-				<span class='btn-group btn-group-justified'>
-                    <a n:href="edit $game->id" class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></a>
-					<a n:href="delete $game->id" class='btn btn-default'><span class='glyphicon glyphicon-remove'></span></a>
-				</span>
+            <li class='list-group-item buttons' n:if="$user->isLoggedIn()">
+                <a n:href="edit $game->id" class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></a>
+                <a n:href="delete $game->id" class='btn btn-default pull-right' data-toggle="confirmation"><span class='glyphicon glyphicon-remove'></span></a>
             </li>
         </ul>
-
-
     </div>
 </div>

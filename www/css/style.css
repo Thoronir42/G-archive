@@ -8,25 +8,24 @@ body{
 #headder{
 	font-size: 4em;
 	font-family: Impact;
-	margin: 12px 0px 20px 60px;
+	margin: 12px 0 20px;
 }
 
-#navMenu a{
-	display: block;
-}
-
-#navMenu menu{
-}
-#navMenu li{
+.navbar{
 	background: yellow;
+}
 
+.nav li, .navbar-brand{
 	color: black;
 	font-size: 1.2em;
-	font-weight: 900;
+	font-weight: 400;
+}
+.navbar-brand{
+	font-weight:900;
 }
 
-#navMenu li.active{
-	background: peachpuff;
+.nav li.active a{
+	background-color: peachpuff !important;
 }
 
 #bodyContent{
@@ -77,6 +76,11 @@ form .error {
 	font-weight: bold;
 }
 
+.picture-panel .panel-body{
+	max-height: 390px;
+	overflow-y: auto;
+}
+
 .game .frame img{
 	max-width:100%;
 }
@@ -97,7 +101,6 @@ form .error {
 
 .img-thumbnail:hover a{
 	visibility: visible;
-	color: #ac2925;
 }
 
 
@@ -106,13 +109,24 @@ form .error {
 	border-color: black;
 }
 
-
-.delete-mark{
+.picture-mark{
 	position: absolute;
-	top:4px;
-	right:4px;
+	right: 4px;
 }
 
+.delete-mark{
+	top: 0.5em;
+	color: #FF6000;
+}
 .delete-mark:hover{
+	color: #FF0000;
+}
 
+.select-mark{
+	top: 3em;
+	color: yellowgreen;
+}
+
+.popover{
+	min-width: 160px;
 }
