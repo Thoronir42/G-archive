@@ -8,29 +8,18 @@ use Kdyby\Doctrine;
 /**
  * @ORM\Entity
  * @ORM\Table(name="picture")
+ *
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn("picture_type", type="string")
+ * @ORM\DiscriminatorMap({"regular" = "Picture", "game" = "GamePicture"})
  */
 class Picture extends BaseEntity {
 
 	use Doctrine\Entities\Attributes\Identifier;
 
-	/**
-	 * @var Game
-	 * @ORM\ManyToOne(targetEntity="Game")
-	 * @ORM\JoinColumn(name="id_game", referencedColumnName="id")
-	 */
-	var $game;
-
-	/** @ORM\Column(type="string", length=100) */
+	/** @ORM\Column(type="string", length=200) */
 	var $path;
 
-	/** @ORM\Column(type="string", length=100, nullable=true) */
+	/** @ORM\Column(type="string", length=1000, nullable=true) */
 	var $description;
-
-	public function isPrimary(){
-		if(!$this->game){
-			return false;
-		}
-		return $this->game->primary_picture == $this;
-	}
-
 }

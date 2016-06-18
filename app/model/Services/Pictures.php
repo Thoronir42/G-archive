@@ -19,8 +19,11 @@ class Pictures extends BaseService
 		parent::__construct($em, $em->getRepository(Picture::class));
 	}
 
-	public function findForGame(Game $game)
+	public function findLoose()
 	{
-		return $this->findBy(['game' => $game]);
+		$query = $this->em->createQuery("SELECT picture FROM App\Model\Picture picture WHERE picture INSTANCE OF App\Model\Picture");
+		$pictures = $query->getResult();
+
+		return $pictures;
 	}
 }

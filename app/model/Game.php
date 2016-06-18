@@ -26,8 +26,14 @@ class Game extends BaseEntity {
 		return self::createInstance(self::class);
 	}
 
-	/** @ORM\Column(type="string", length=100) */
+	/** @ORM\Column(type="string", length=420) */
 	var $name;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="Platform")
+	 * @ORM\JoinColumn(name="platform", referencedColumnName="id")
+	 */
+	protected $platform;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="State")
@@ -56,8 +62,8 @@ class Game extends BaseEntity {
 	var $affection;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Picture", mappedBy="game")
-	 * @var Picture[]
+	 * @var ArrayCollection
+	 * @ORM\OneToMany(targetEntity="GamePicture", mappedBy="game")
 	 */
 	var $pictures;
 
@@ -70,7 +76,7 @@ class Game extends BaseEntity {
 
 	public function __construct() {
 		parent::__construct();
-		$this->pictures = new ArrayCollection();
+		$this->pictures = new ArrayCollection;
 	}
 
 	public function getCompletionPct(){

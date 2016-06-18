@@ -3,7 +3,6 @@ namespace App\Model\Services;
 
 
 use App\Libs\GASettings;
-use App\Model\BaseEntity;
 use App\Model\Game;
 use Kdyby\Doctrine\EntityManager;
 

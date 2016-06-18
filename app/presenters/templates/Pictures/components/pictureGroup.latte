@@ -1,0 +1,34 @@
+{*
+@param $title
+@param $link
+@param $pictures
+@param $primary
+*}
+<div class="panel panel-default picture-panel">
+	<div class="panel-heading">
+		{if $link}
+		<a href="{$link}">{$title}</a>
+		{else}
+			{$title}
+		{/if}
+	</div>
+	<div class="panel-body text-center">
+		{foreach $pictures as  $picture}
+			{var $is_primary = $picture == $primary}
+			<div n:class="img-thumbnail, $is_primary?'primary-picture'">
+
+				{include '../../components/nullablePicture.latte', picture => $picture, imgClass => 'img-rounded'}
+
+				{var $operable = $user->isLoggedIn() && !$is_primary}
+
+				<a n:href="delete! $picture->id" n:if="$operable" class="picture-mark delete-mark ajax"
+																  data-toggle="confirmation">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
+				<a n:href="select! $picture->id" n:if="$operable" class="picture-mark select-mark ajax">
+					<span class="glyphicon glyphicon-screenshot"></span>
+				</a>
+			</div>
+		{/foreach}
+	</div>
+</div>

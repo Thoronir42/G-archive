@@ -5,6 +5,7 @@ use App\Forms\IAddPictureFormFactory;
 use App\Forms\IEditGameFormFactory;
 use App\Libs\ImageManager;
 use App\Model\Game;
+use App\Model\GamePicture;
 use App\Model\Picture;
 use App\Model\Services\Games;
 use App\Model\Services\Pictures;
@@ -51,7 +52,8 @@ class PicturesPresenter extends BasePresenter{
 	}
 
 	public function handleSelect($id){
-		/** @var Picture $picture */
+
+		/** @var GamePicture $picture */
 		$picture = $this->pictures->find($id);
 
 		if(!$picture){
@@ -71,6 +73,8 @@ class PicturesPresenter extends BasePresenter{
 	public function renderDefault() {
 		$this->template->title = "Zátkovy těstoviny";
 		$this->template->games = $this->games->findAll();
+
+		$this->template->loose_pictures = $this->pictures->findLoose();
 	}
 
 	public function createComponentAddPictureForm()

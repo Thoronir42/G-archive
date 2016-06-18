@@ -12,10 +12,10 @@ use Nette\Object;
 class BaseService extends Object
 {
 	/** @var EntityManager */
-	private $em;
+	protected $em;
 
 	/** @var EntityRepository  */
-	private $repository;
+	protected $repository;
 
 	/**
 	 * @param EntityManager $em
