@@ -1,5 +1,7 @@
 body{
-	background-color: hotpink;
+	background-image: url("/images/bgt.png");
+
+	background-color: orangered;
 	font-size: 15px;
 	line-height: 1.6;
 }
@@ -11,8 +13,8 @@ body{
 	margin: 12px 0 20px;
 }
 
-.navbar{
-	background: yellow;
+.navbar, .dropdown-menu{
+	background-color: palegreen;
 }
 
 .nav li, .navbar-brand{
@@ -24,8 +26,14 @@ body{
 	font-weight:900;
 }
 
-.nav li.active a{
-	background-color: peachpuff !important;
+.nav li.active a,
+.nav .open li.active a,
+.nav .open a.dropdown-toggle{
+	color: #DDD !important;
+	background-color: darkred !important;
+}
+.nav .divider{
+	background-color: black;
 }
 
 #bodyContent{

@@ -11,7 +11,7 @@ use Kdyby\Doctrine;
  *
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn("picture_type", type="string")
- * @ORM\DiscriminatorMap({"regular" = "Picture", "game" = "GamePicture"})
+ * @ORM\DiscriminatorMap({"regular" = "Picture", "game" = "GamePicture", "platform" = "PlatformPicture"})
  */
 class Picture extends BaseEntity {
 

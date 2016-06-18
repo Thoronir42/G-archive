@@ -13,17 +13,6 @@ use App\Model;
 
 class SteelPresenter extends BasePresenter
 {
-	const GAME_COLS = 4; // Musí být dělitel 12
-
-	/** @var Games @inject  */
-	public $games;
-
-	/** @var Pictures @inject  */
-	public $pictures;
-
-	/** @var IEditGameFormFactory @inject  */
-	public $editGameFormFactory;
-
 	/** @var Initialiser @inject  */
 	public $initialiser;
 
@@ -32,7 +21,7 @@ class SteelPresenter extends BasePresenter
 		parent::startup();
 		if(!$this->user->isLoggedIn()){
 			$this->flashMessage("To access Steel, you must be Steel.");
-			$this->redirect('Games:');
+			$this->redirect('Sign:in');
 		}
 		$this->template->title = "Steelasdf";
 	}
@@ -47,5 +36,6 @@ class SteelPresenter extends BasePresenter
 		$this->flashMessage("Databáze inicializována (pravděpodobně)");
 		$this->redirect('default');
 	}
+
 
 }

@@ -7,9 +7,11 @@ services:
 
 	- App\Forms\FormFactory
 	- App\Forms\ISignInFormFactory
+	- App\Forms\IEditPlatformFormFactory
 	- App\Forms\IEditGameFormFactory
 	- App\Forms\IAddPictureFormFactory
 
+	- App\Model\Services\Platforms
 	- App\Model\Services\Games
 	- App\Model\Services\Pictures
 	- App\Model\Services\States

@@ -29,7 +29,7 @@ class GamesPresenter extends BasePresenter
 	public function startup()
 	{
 		parent::startup();
-		$this->steelCheck();
+		$this->steelCheck("Pro správu her musíš být přihlášen.");
 	}
 
 	public function renderDefault()

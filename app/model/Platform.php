@@ -23,7 +23,14 @@ class Platform extends BaseEntity
 	/** @ORM\Column(type="string", length=420) */
 	protected $name;
 
-	protected $picture;
+	/** @ORM\Column(type="integer") */
+	protected $count;
+
+	/**
+	 * @var ArrayCollection
+	 * @ORM\OneToMany(targetEntity="GamePicture", mappedBy="game")
+	 */
+	protected $pictures;
 
 	/**
 	 * @var ArrayCollection
@@ -33,6 +40,7 @@ class Platform extends BaseEntity
 
 	public function __construct()
 	{
+		$this->pictures = new ArrayCollection;
 		$this->games = new ArrayCollection;
 	}
 }

@@ -34,8 +34,7 @@ class PicturesPresenter extends BasePresenter{
 	public function startup()
 	{
 		parent::startup();
-		$this->steelCheck();
-
+		$this->steelCheck('Pro správu obrázků musíš být přihlášen.');
 	}
 
 	public function handleDelete($id){

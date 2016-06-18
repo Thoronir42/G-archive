@@ -28,24 +28,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$this->template->max_affection = $this->gameParams->getMaxRating();
 		$this->template->image_dir = __DIR__ . '/../../www/images/games/';
 
-		/** @var NavigationMenu $menu */
-		$menu = $this['menu'];
-		$menu->setTitle('G archive');
-
 		$this->template->title = '';
 
 	}
 
-	protected function steelCheck($allowedActions = []){
+	protected function steelCheck($message = 'Pro vstup do této části musíš být přihlášen.', $allowedActions = ['default']){
 		$action = $this->getAction();
 
-		if($action == 'default'){
-			return;
-		}
-
-
 		if(!in_array($action, $allowedActions) && !$this->user->isLoggedIn()){
-			$this->flashMessage('Jsi opravdu Steel, že chceš provádět \'' . $action . '\'?');
+			$this->flashMessage($message);
 			$this->redirect('default');
 		}
 	}
@@ -53,27 +44,18 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	public function createComponentMenu()
 	{
 		$menu = $this->navigationMenuFactory->create();
+		$menu->setTitle('G archive');
 
-		$items = $this->buildMenu();
+		$menu->addItem('Games:default', 'Hry');
+		$menu->addItem('Pictures:', 'Obrázky');
 
-		foreach ($items as $item){
-			$menu->addItem($item['code'], $item['title']);
+		if($this->user->isLoggedIn()){
+			$manageItem = $menu->addItem('default', 'Správa');
+			$manageItem->addItem('Games:add', 'Zadat novou hru');
+			$manageItem->addSeparator();
+			$manageItem->addItem('Platforms:', 'Platformy');
 		}
 
 		return $menu;
-	}
-
-	private function buildMenu()
-	{
-		$items = [];
-
-		$items[] = ["code" => "Games:default", "title" => "Výpis her"];
-		if($this->user->isLoggedIn()){
-			$items[] = ["code" => "Games:add", "title" => "+ Zadat novou hru"];
-		}
-
-		$items[] = ["code" => "Pictures:", "title" => "Seznam obrázků"];
-
-		return $items;
 	}
 }

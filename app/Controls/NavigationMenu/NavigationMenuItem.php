@@ -84,6 +84,34 @@ class NavigationMenuItem extends Object{
 		$this->items = $items;
 	}
 
+	/**
+	 * @param $code
+	 * @param $caption
+	 */
+	public function addItem($code, $caption)
+	{
+		$item = new NavigationMenuItem;
+		$item->code = $code;
+		$item->caption = $caption;
+
+		$this->items[] = $item;
+
+		return $item;
+	}
+
+	public function addSeparator()
+	{
+		$this->addItem(null, '');
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isSeparator()
+	{
+		return !$this->code;
+	}
+
 
 
 
