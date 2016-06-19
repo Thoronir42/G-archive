@@ -2,12 +2,15 @@
 
 namespace App\Forms;
 
+use App\Libs\ImageManager;
 use App\Model\Platform;
+use App\Model\PlatformPicture;
 use Nette\Application\UI as UI;
 
 
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Http\FileUpload;
 use Nette\Security\User;
 
 class EditPlatformForm extends UI\Control
@@ -20,26 +23,34 @@ class EditPlatformForm extends UI\Control
 
 	/** @var Platform */
 	private $platform;
+	/** @var ImageManager */
+	private $imageManager;
 
 
-	public function __construct(FormFactory $factory)
+	public function __construct(FormFactory $factory, ImageManager $imageManager)
 	{
 		parent::__construct();
 		$this->factory = $factory;
+
+		$imageManager->setMode(ImageManager::MODE_PLATFORM);
+		$this->imageManager = $imageManager;
+
 		$this->platform = new Platform();
 	}
-	
-	public function setEntity(Platform $platform){
+
+	public function setEntity(Platform $platform)
+	{
 		$this->platform = $platform;
 
 		/** @var Form $form */
 		$form = $this['form'];
 
-		$form->setDefaults($platform->toArray());
+		$defaults = $platform->toArray();
+		$form->setDefaults($defaults);
 
 		/** @var SubmitButton $submit */
 		$submit = $form['save'];
-		$submit->caption = 'Upravit';
+		$submit->caption = 'Uložit úpravy';
 
 	}
 
@@ -53,12 +64,12 @@ class EditPlatformForm extends UI\Control
 	{
 		$form = $this->factory->create();
 
-		$form->addText('name', 'Název')->setMaxLength(420)->setRequired();
+		$form->addText('title', 'Název')->setMaxLength(420)->setRequired();
 		$form->addText('count', 'Počet')->setDefaultValue(1);
 
 		$form->addUpload('picture', 'Foto');
 
-		$form->addSubmit('send', 'Vložit');
+		$form->addSubmit('save', 'Vložit');
 
 		$form->onSuccess[] = $this->processForm;
 		return $form;
@@ -66,7 +77,38 @@ class EditPlatformForm extends UI\Control
 
 	public function processForm(Form $form, $values)
 	{
-		$this->onSave($this);
+		$platform = $this->platform;
+
+		/** @var FileUpload $upload */
+		$upload = $values['picture'];
+		unset($values['picture']);
+
+		$picture = $this->createPicture($upload);
+		if($upload->name && $upload->error && !$picture){
+			foreach ($this->imageManager->getErrors() as $error){
+				$form['picture']->addError($error);
+			}
+			return;
+		}
+
+		foreach ($values as $field => $value){
+			$platform->$field = $value;
+		}
+
+		$this->onSave($form, $platform, $picture);
+	}
+
+	private function createPicture(FileUpload $upload)
+	{
+		$path = $this->imageManager->put($upload);
+		if ($path) {
+			$picture = new PlatformPicture();
+			$picture->path = $path;
+			$picture->platform = $this->platform;
+			return $picture;
+		}
+
+		return null;
 	}
 }
 

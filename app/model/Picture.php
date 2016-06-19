@@ -9,7 +9,7 @@ use Kdyby\Doctrine;
  * @ORM\Entity
  * @ORM\Table(name="picture")
  *
- * @ORM\InheritanceType("JOINED")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn("picture_type", type="string")
  * @ORM\DiscriminatorMap({"regular" = "Picture", "game" = "GamePicture", "platform" = "PlatformPicture"})
  */

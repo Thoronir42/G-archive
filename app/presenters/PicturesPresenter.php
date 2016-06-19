@@ -37,9 +37,18 @@ class PicturesPresenter extends BasePresenter{
 		$this->steelCheck('Pro správu obrázků musíš být přihlášen.');
 	}
 
+	public function renderDefault() {
+		$games = $this->games->findAll();
+
+		$this->template->loose_pictures = $this->pictures->findLoose();
+		$this->template->title = "Zátkovy těstoviny";
+		$this->template->games = $games;
+	}
+
 	public function handleDelete($id){
 		/** @var Picture $picture */
 		$picture = $this->pictures->find($id);
+		dump($picture);exit;
 		try{
 			$this->pictures->delete($picture);
 		} catch (ForeignKeyConstraintViolationException $ex){
@@ -47,7 +56,7 @@ class PicturesPresenter extends BasePresenter{
 			$this->redirect('default');
 		}
 
-		$this->imageManager->delete($picture->path);
+		$this->imageManager->delete($picture);
 	}
 
 	public function handleSelect($id){
@@ -62,18 +71,11 @@ class PicturesPresenter extends BasePresenter{
 
 		$game = $picture->game;
 		$game->primary_picture = $picture;
-		
+
 		$this->games->save($game);
 
 		$this->flashMessage("Primární obrázek hry $game->name byl nasaven.");
 		$this->redirect('default');
-	}
-
-	public function renderDefault() {
-		$this->template->title = "Zátkovy těstoviny";
-		$this->template->games = $this->games->findAll();
-
-		$this->template->loose_pictures = $this->pictures->findLoose();
 	}
 
 	public function createComponentAddPictureForm()

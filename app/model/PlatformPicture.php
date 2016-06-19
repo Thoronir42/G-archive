@@ -8,12 +8,34 @@
 
 namespace App\Model;
 
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ */
 class PlatformPicture extends Picture
 {
 	/**
-	 * @var Game
-	 * @ORM\ManyToOne(targetEntity="Platform")
+	 * @var Platform
+	 * @ORM\OneToOne(targetEntity="Platform", inversedBy="picture")
 	 */
-	protected $game;
+	protected $platform;
+
+	/**
+	 * @return Platform
+	 */
+	public function getPlatform()
+	{
+		return $this->platform;
+	}
+
+	/**
+	 * @param Platform $platform
+	 */
+	public function setPlatform($platform)
+	{
+		$this->platform = $platform;
+	}
+
+	
 }

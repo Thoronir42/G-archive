@@ -35,7 +35,11 @@ class BaseEntity extends Doctrine\Entities\BaseEntity{
 	public function toArray() {
 		$array = [];
 		foreach ($this as $field => $value) {
+			if($value instanceof BaseEntity){
+				$value = $value->id;
+			}
 			$array[$field] = $value;
+
 		}
 		return $array;
 	}

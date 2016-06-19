@@ -5,12 +5,14 @@ namespace App\Presenters;
 use App\Forms\EditGameForm;
 use App\Forms\IEditGameFormFactory;
 use App\Model\Game;
+use App\Model\GamePicture;
 use App\Model\Picture;
 use App\Model\Services\Games;
 use App\Model\Services\Pictures;
 use Components\EntityForm;
 use Nette;
 use App\Model;
+use Nette\Application\UI\Form;
 
 
 class GamesPresenter extends BasePresenter
@@ -80,15 +82,13 @@ class GamesPresenter extends BasePresenter
 	{
 		$form = $this->editGameFormFactory->create();
 
-		$form->onSave[] = function (EntityForm $form, Game $game, $picture = null){
+		$form->onSave[] = function (Form $form, Game $game, GamePicture $picture = null){
 			if($picture){
-				if(!($picture instanceof Picture)){
-					$picture = $this->pictures->find($picture);
-				}
 				$game->primary_picture = $picture;
+				$game->pictures->add($picture);
+
 				$this->pictures->save($picture, false);
 			}
-
 			$this->games->save($game);
 			$this->flashMessage("Hra $game->name byla úspěšně přidána.");
 			$this->redirect('default');

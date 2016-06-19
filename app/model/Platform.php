@@ -21,16 +21,19 @@ class Platform extends BaseEntity
 	use Doctrine\Entities\Attributes\Identifier;
 
 	/** @ORM\Column(type="string", length=420) */
-	protected $name;
+	var $title;
 
 	/** @ORM\Column(type="integer") */
-	protected $count;
+	var $count;
 
 	/**
-	 * @var ArrayCollection
-	 * @ORM\OneToMany(targetEntity="GamePicture", mappedBy="game")
+	 * @var PlatformPicture
+	 * @ORM\OneToOne(targetEntity="PlatformPicture", mappedBy="platform")
 	 */
-	protected $pictures;
+	var $picture;
+
+	/** @ORM\Column(type="integer") */
+	var $sequence = 0;
 
 	/**
 	 * @var ArrayCollection
@@ -40,7 +43,88 @@ class Platform extends BaseEntity
 
 	public function __construct()
 	{
-		$this->pictures = new ArrayCollection;
 		$this->games = new ArrayCollection;
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+	/**
+	 * @param mixed $title
+	 */
+	public function setTitle($title)
+	{
+		$this->title = $title;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getCount()
+	{
+		return $this->count;
+	}
+
+	/**
+	 * @param mixed $count
+	 */
+	public function setCount($count)
+	{
+		$this->count = $count;
+	}
+
+	/**
+	 * @return PlatformPicture
+	 */
+	public function getPicture()
+	{
+		return $this->picture;
+	}
+
+	/**
+	 * @param PlatformPicture $picture
+	 */
+	public function setPicture($picture)
+	{
+		$this->picture = $picture;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getSequence()
+	{
+		return $this->sequence;
+	}
+
+	/**
+	 * @param mixed $sequence
+	 */
+	public function setSequence($sequence)
+	{
+		$this->sequence = $sequence;
+	}
+
+	/**
+	 * @return ArrayCollection
+	 */
+	public function getGames()
+	{
+		return $this->games;
+	}
+
+	/**
+	 * @param ArrayCollection $games
+	 */
+	public function setGames($games)
+	{
+		$this->games = $games;
+	}
+
+	
 }

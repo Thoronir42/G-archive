@@ -8,12 +8,10 @@
 
 namespace App\Model;
 
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="game_picture")
  */
 class GamePicture extends Picture
 {

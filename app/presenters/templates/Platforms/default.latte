@@ -1,1 +1,42 @@
 {block content}
+	<a n:href="add" class="btn btn-success pull-right">
+		<span class="glyphicon glyphicon-plus"></span>
+		<span>Přidat</span>
+	</a>
+	<table class="table sorter">
+		<thead>
+		<tr>
+			<th>
+				Název platformy
+			</th>
+			<th>
+				Akce
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr n:foreach="$platforms as $platform" data-id="{$platform->id}">
+			<td data-label="Název" class="title">{$platform->title}</td>
+			<td data-label="Akce" class="td-center">
+				<a title="Upravit" n:href="edit, $platform->id" class="btn btn-primary">
+					<i class="glyphicon glyphicon-edit"></i>
+				</a>
+			</td>
+		</tr>
+
+
+		</tbody>
+	</table>
+
+	<div class="row">
+		<div class="col"></div>
+	</div>
+
+	<script>
+		var handle_sort = {link sort!};
+	</script>
+{/block}
+
+{define #script}{include #parent}{include #script, files => [
+'/vendor/tableSorter.js',
+]}{/define}

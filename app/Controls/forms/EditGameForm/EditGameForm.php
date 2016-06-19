@@ -5,11 +5,14 @@ namespace App\Forms;
 use App\Libs\GASettings;
 use App\Libs\ImageManager;
 use App\Model\Game;
+use App\Model\GamePicture;
 use App\Model\Picture;
 use App\Model\Services\Games;
+use App\Model\Services\Platforms;
 use App\Model\Services\States;
 use Components\EntityForm;
 use Nette\Application\UI as UI;
+use Nette\Application\UI\Form;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
@@ -29,28 +32,32 @@ class EditGameForm extends UI\Control
 
 	/** @var States */
 	private $states;
+	/** @var Platforms */
+	private $platforms;
 
 	/** @var ImageManager */
 	private $imageManager;
 
+	/** @var Game */
 	private $game;
 
 
-	public function __construct(ImageManager $imageManager, States $states, GASettings $game_settings)
+	public function __construct(ImageManager $imageManager, States $states, Platforms $platforms, GASettings $game_settings)
 	{
 		parent::__construct();
+
+		$imageManager->setMode(ImageManager::MODE_GAME);
 
 		$this->imageManager = $imageManager;
 		$this->states = $states;
 		$this->game_settings = $game_settings;
+
+		$this->game = new Game();
+		$this->platforms = $platforms;
 	}
 
 	public function render()
 	{
-		if(!$this->game){
-			$this['form']['picture_select']->setDisabled();
-		}
-
 		$this->template->setFile(__DIR__ . '/editGameForm.latte');
 
 		$this->template->range_accuracy = $this->game_settings->getCompletionRange();
@@ -64,26 +71,12 @@ class EditGameForm extends UI\Control
 	 */
 	public function setGame(Game $game)
 	{
+		$this->game = $game;
 		/** @var EntityForm $form */
 		$form = $this['form'];
 
-		$form->bindEntity($this->game = $game);
+		$form->setDefaults($game->toArray());
 
-
-		/** @var SelectBox $select */
-		$select = $form['picture_select'];
-
-		$picture_pairs = [];
-		foreach ($game->pictures as $picture) {
-			$picture_pairs[$picture->getId()] = $picture->path;
-		}
-
-		$select->setDisabled(empty($picture_pairs));
-		$select->setItems($picture_pairs);
-
-		/** @var RadioList $radios */
-		$radios = $form['picture_src'];
-		$radios->setDisabled(false);
 
 		/** @var SubmitButton $submit */
 		$submit = $form['save'];
@@ -95,7 +88,7 @@ class EditGameForm extends UI\Control
 		if ($game->primary_picture) {
 			$defaults['picture_select'] = $game->primary_picture->getId();
 		}
-		if(!empty($picture_pairs)){
+		if (!empty($picture_pairs)) {
 			$defaults['picture_src'] = self::$PICTURE_SRC_SELECT;
 		}
 		$form->setDefaults($defaults);
@@ -105,17 +98,14 @@ class EditGameForm extends UI\Control
 	public function createComponentForm()
 	{
 		$states = $this->states->findPairs('label');
+		$platforms = $this->platforms->findPairs('title');
 
-		$form = new EntityForm;
-		$form->bindEntity(new Game);
+		$form = new Form;
 
 		$form->addText('name', 'Název');
 		$form->addUpload('picture', 'Titulní obrázek');
 
-		$form->addRadioList('picture_src', '',
-			[self::$PICTURE_SRC_UPLOAD => '', self::$PICTURE_SRC_SELECT => '']);
-
-		$form->addSelect('picture_select', [])->setPrompt("Výběr primárního obrázku");
+		$form->addSelect('platform', 'Platforma', $platforms)->setPrompt('Bez výběru');
 
 		$form->addSelect('cartridge_state', 'Cartridge', $states);
 		$form->addSelect('packing_state', 'Balení', $states);
@@ -128,31 +118,27 @@ class EditGameForm extends UI\Control
 
 		$form->onSuccess[] = $this->processForm;
 
-		$form->setDefaults(['picture_src' => 'upload', 'affection' => 10]);
+		$form->setDefaults(['affection' => $this->game_settings->getMaxRating() / 2]);
 
 		return $form;
 	}
 
 
-	public function processForm(EntityForm $form, $values)
+	public function processForm(Form $form, $values)
 	{
 		/** @var Game $game */
-		$game = $form->getEntity();
+		$game = $this->game;
 
 		/** @var FileUpload $picture */
 		$picture = $values['picture'];
 		unset($values['picture']);
 
-		$picture_src = $values['picture_src'];
-		unset($values['picture_src']);
-
-		$picture_select = $values['picture_select'];
-		unset($values['picture_select']);
-
 		$state_fields = ['cartridge_state', 'packing_state', 'manual_state'];
 		foreach ($state_fields as $field) {
 			$values[$field] = $this->states->find($values[$field]);
 		}
+
+		$values['platform'] = $this->platforms->find($values['platform']);
 
 		$values['completion'] /= $this->game_settings->getCompletionRange();
 
@@ -162,18 +148,13 @@ class EditGameForm extends UI\Control
 
 		$path = $this->imageManager->put($picture);
 		if ($path) {
-			$out_picture = new Picture;
-			$out_picture->game = $game;
+			$out_picture = new GamePicture();
 			$out_picture->path = $path;
-			$game->pictures->add($out_picture);
+			$out_picture->game = $game;
 		} else {
 			$out_picture = null;
 		}
 
-		if ($picture_src == self::$PICTURE_SRC_SELECT) {
-			$out_picture = $picture_select;
-		}
-		
 		$this->onSave($form, $game, $out_picture);
 	}
 }

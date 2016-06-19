@@ -1,7 +1,12 @@
 <?php
 
 namespace App\Libs;
+use App\Model\Game;
+use App\Model\GamePicture;
+use App\Model\Picture;
+use App\Model\PlatformPicture;
 use Nette\Http\FileUpload;
+use Nette\InvalidArgumentException;
 
 /**
  * Description of ImageManager
@@ -14,18 +19,47 @@ class ImageManager {
 		return ["jpg", "jpeg", "png", "gif"];
 	}
 
+	const
+		MODE_DEFAULT = 'default',
+		MODE_GAME = 'game',
+		MODE_PLATFORM = 'platform';
+
+
 	const MIN_IMG_SIZE = 150;
 	const MAX_IMG_SIZE = 2000;
 	const MAX_IMG_FILE_SIZE = 12 * 1024 * 1024;
 
+	private static $BASE_DIR = __DIR__ . "/../../www/images/";
+	
 	protected $imgFolder;
 
 	private $errors;
 
 	public function __construct()
 	{
-		$this->imgFolder = __DIR__ . "/../../www/images/games/";
+		$this->imgFolder = $this->getDir(self::MODE_DEFAULT);
 		$this->errors = [];
+	}
+
+	public function setMode($mode){
+		$this->imgFolder = $this->getDir($mode);
+
+		if(!is_dir($this->imgFolder)){
+			mkdir($this->imgFolder);
+		}
+	}
+
+	private function getDir($mode)
+	{
+		switch ($mode){
+			default:
+			case self::MODE_DEFAULT:
+				return self::$BASE_DIR;
+			case self::MODE_GAME:
+				return self::$BASE_DIR . 'games/';
+			case self::MODE_PLATFORM:
+				return self::$BASE_DIR . 'platforms/';
+		}
 	}
 
 	/**
@@ -148,8 +182,27 @@ class ImageManager {
 		return $this->errors;
 	}
 
-	public function delete($path){
-		unlink($this->imgFolder . $path);
+
+	/**
+	 * @param Picture|GamePicture|PlatformPicture $picture
+	 */
+	public function delete($picture){
+		$dir = $this->getDir($this->getMode($picture));
+		@unlink($dir . $picture->path);
+	}
+
+	private function getMode($picture)
+	{
+		if($picture instanceof Picture){
+			return self::MODE_DEFAULT;
+		}
+		if($picture instanceof GamePicture){
+			return self::MODE_GAME;
+		}
+		if($picture instanceof PlatformPicture){
+			return self::MODE_PLATFORM;
+		}
+		throw new InvalidArgumentException("Invalid use of " .type_class($picture). " in ImageManager");
 	}
 
 

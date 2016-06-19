@@ -3,7 +3,6 @@
 namespace App\Presenters;
 
 use App\Controls\INavigationMenuFactory;
-use App\Controls\NavigationMenu;
 use App\Libs\GASettings;
 use Nette;
 use App\Model;

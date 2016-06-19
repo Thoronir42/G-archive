@@ -10,7 +10,7 @@ use Kdyby\Doctrine;
  * @ORM\Entity
  * @ORM\Table(name="state")
  */
-class State extends Doctrine\Entities\BaseEntity
+class State extends BaseEntity
 {
 	use Doctrine\Entities\Attributes\Identifier;
 
