@@ -33,10 +33,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	protected function steelCheck($message = 'Pro vstup do této části musíš být přihlášen.', $allowedActions = ['default']){
 		$action = $this->getAction();
+		if(in_array($action, $allowedActions) || $this->user->isLoggedIn()){
+			return;
+		}
 
-		if(!in_array($action, $allowedActions) && !$this->user->isLoggedIn()){
-			$this->flashMessage($message);
+		$this->flashMessage($message);
+		if(in_array('default', $allowedActions)){
 			$this->redirect('default');
+		} else {
+			$this->redirect('Games:');
 		}
 	}
 
@@ -53,6 +58,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 			$manageItem->addItem('Games:add', 'Zadat novou hru');
 			$manageItem->addSeparator();
 			$manageItem->addItem('Platforms:', 'Platformy');
+			$manageItem->addItem('States:', 'Stavy');
 		}
 
 		return $menu;

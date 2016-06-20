@@ -10,13 +10,22 @@ use Kdyby\Doctrine\EntityManager;
 
 class States extends BaseService
 {
-	/** @return GASettings */
-	public static function getSettings(){
-		return GASettings::instance();
-	}
-
 	public function __construct(EntityManager $em)
 	{
 		parent::__construct($em, $em->getRepository(State::class));
+	}
+
+	public function delete($state)
+	{
+		if($state instanceof State){
+			$state->deleted = true;
+			$this->save($state);
+		} else {
+			parent::delete($state);
+		}
+	}
+	public function undelete(State $state){
+		$state->deleted = false;
+		$this->save($state);
 	}
 }

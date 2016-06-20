@@ -1,0 +1,32 @@
+{block content}
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<form class="form-inline text-center" id="form-state-adder" action="{link add! '420'}">
+			<p class="form-control-static">Popisek</p>
+			<input type="text" name="label" class="form-control">
+			<input type="submit" name="save" value="Přidat" class="btn btn-success">
+		</form>
+	</div>
+	<div class="panel-body">
+		<ul class="list-group sortable" n:snippet="states">
+			<li class="list-group-item" n:foreach="$states as $state" data-id="{$state->id}">
+				<span class="glyphicon glyphicon-move"></span>
+				<span>{$state->label}</span>
+				{if !$state->deleted}
+					<a class="btn btn-warning btn-list ajax" data-toggle="confirmation" n:href="delete! $state->id">
+						<i class="glyphicon glyphicon-trash"></i>
+					</a>
+				{else}
+					<a class="btn btn-info btn-list ajax" n:href="undelete! $state->id">
+						<i class="glyphicon glyphicon-refresh"></i>
+					</a>
+				{/if}
+			</li>
+		</ul>
+	</div>
+</div>
+
+<script>
+	var handle_sort = {link sort!};
+</script>

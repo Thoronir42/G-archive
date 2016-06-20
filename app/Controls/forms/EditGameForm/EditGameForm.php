@@ -6,24 +6,15 @@ use App\Libs\GASettings;
 use App\Libs\ImageManager;
 use App\Model\Game;
 use App\Model\GamePicture;
-use App\Model\Picture;
-use App\Model\Services\Games;
 use App\Model\Services\Platforms;
 use App\Model\Services\States;
-use Components\EntityForm;
 use Nette\Application\UI as UI;
 use Nette\Application\UI\Form;
-use Nette\Forms\Controls\RadioList;
-use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Http\FileUpload;
 
 class EditGameForm extends UI\Control
 {
-
-	private static $PICTURE_SRC_UPLOAD = 'upload';
-	private static $PICTURE_SRC_SELECT = 'select';
-
 
 	public $onSave = [];
 
@@ -72,7 +63,7 @@ class EditGameForm extends UI\Control
 	public function setGame(Game $game)
 	{
 		$this->game = $game;
-		/** @var EntityForm $form */
+		/** @var Form $form */
 		$form = $this['form'];
 
 		$form->setDefaults($game->toArray());
@@ -85,19 +76,13 @@ class EditGameForm extends UI\Control
 		$defaults = [
 			'completion' => $game->completion * $this->game_settings->getCompletionRange(),
 		];
-		if ($game->primary_picture) {
-			$defaults['picture_select'] = $game->primary_picture->getId();
-		}
-		if (!empty($picture_pairs)) {
-			$defaults['picture_src'] = self::$PICTURE_SRC_SELECT;
-		}
 		$form->setDefaults($defaults);
 
 	}
 
 	public function createComponentForm()
 	{
-		$states = $this->states->findPairs('label');
+		$states = $this->states->findPairs(['deleted' => false], 'label');
 		$platforms = $this->platforms->findPairs('title');
 
 		$form = new Form;

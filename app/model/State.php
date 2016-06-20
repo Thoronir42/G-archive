@@ -15,12 +15,15 @@ class State extends BaseEntity
 	use Doctrine\Entities\Attributes\Identifier;
 
 	/** @ORM\Column(type="integer") */
-	var $sequence;
+	var $sequence = 1;
 
 	/**
 	 * @ORM\Column(type="string", length=100, nullable=true)
 	 */
 	var $label;
+
+	/** @ORM\Column(type="boolean") */
+	var $deleted = false;
 
 	/**
 	 * @return mixed

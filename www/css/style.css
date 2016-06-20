@@ -14,7 +14,7 @@ body{
 }
 
 .navbar, .dropdown-menu{
-	background-color: palegreen;
+	background-color: dimgray;
 }
 
 .nav li, .navbar-brand{
@@ -25,11 +25,18 @@ body{
 .navbar-brand{
 	font-weight:900;
 }
+.nav a, .navbar-brand{
+	color:cornsilk !important;
+}
+.dropdown-menu a:hover{
+	background-color: cornsilk !important;
+	color: darkred !important;
+}
 
 .nav li.active a,
 .nav .open li.active a,
 .nav .open a.dropdown-toggle{
-	color: #DDD !important;
+	color: cornsilk !important;
 	background-color: darkred !important;
 }
 .nav .divider{
@@ -137,4 +144,8 @@ form .error {
 
 .popover{
 	min-width: 160px;
+}
+
+.btn-list{
+	top: 5px; right: 5px; position: absolute;
 }
