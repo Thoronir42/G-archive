@@ -5,6 +5,8 @@ $(document).ready( function () {
 
     initStateAdder();
 
+    initTags();
+
     $.nette.init();
 });
 
@@ -46,4 +48,11 @@ function initStateAdder(){
         $.get(action);
         return;
     });
+}
+
+function initTags(){
+    var options = {
+        tags: true
+    };
+    $('.tags').select2(options)
 }

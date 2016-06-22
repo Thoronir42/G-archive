@@ -9,6 +9,8 @@ use App\Model\GamePicture;
 use App\Model\Picture;
 use App\Model\Services\Games;
 use App\Model\Services\Pictures;
+use App\Model\Services\Platforms;
+use App\Model\Tag;
 use Components\EntityForm;
 use Nette;
 use App\Model;
@@ -21,6 +23,9 @@ class GamesPresenter extends BasePresenter
 
 	/** @var Games @inject  */
 	public $games;
+
+	/** @var Platforms @inject */
+	public $platforms;
 
 	/** @var Pictures @inject  */
 	public $pictures;
@@ -36,9 +41,12 @@ class GamesPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$games = $this->games->findAll();
+		$platforms = $this->platforms->findAll();
+
+		$game = $this->games->findOneBy(['platform' => $platforms[0]]);
+
 		$this->template->title  = "Vcesko";
-		$this->template->games = $games;
+		$this->template->platforms = $platforms;
 		$this->template->column_count = self::GAME_COLS;
 	}
 
@@ -82,13 +90,22 @@ class GamesPresenter extends BasePresenter
 	{
 		$form = $this->editGameFormFactory->create();
 
-		$form->onSave[] = function (Form $form, Game $game, GamePicture $picture = null){
+		$form->onSave[] = function (Form $form, Game $game, GamePicture $picture = null, $tags = []){
 			if($picture){
 				$game->primary_picture = $picture;
 				$game->pictures->add($picture);
 
 				$this->pictures->save($picture, false);
 			}
+
+
+			$game->completion_tags->clear();
+
+			/** @var Tag $tag */
+			foreach ($tags as $tag){
+				$game->completion_tags->add($tag);
+			}
+
 			$this->games->save($game);
 			$this->flashMessage("Hra $game->name byla úspěšně přidána.");
 			$this->redirect('default');

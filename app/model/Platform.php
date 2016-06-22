@@ -39,7 +39,7 @@ class Platform extends BaseEntity
 	 * @var ArrayCollection
 	 * @ORM\OneToMany(targetEntity="Game", mappedBy="platform")
 	 */
-	protected $games;
+	var $games;
 
 	public function __construct()
 	{

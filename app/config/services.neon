@@ -15,5 +15,6 @@ services:
 	- App\Model\Services\Games
 	- App\Model\Services\Pictures
 	- App\Model\Services\States
+	- App\Model\Services\Tags
 
 	router: App\RouterFactory::createRouter

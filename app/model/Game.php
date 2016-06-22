@@ -8,7 +8,6 @@ use Kdyby\Doctrine;
 use Doctrine\ORM\Mapping as ORM;
 
 
-use App\Model\Services\Games;
 
 /**
  * @ORM\Entity
@@ -54,9 +53,14 @@ class Game extends BaseEntity {
 	var $packing_state;
 
 	/**
-	 * @ORM\Column(type="float")
+	 * @var ArrayCollection
+	 * @ORM\ManyToMany(targetEntity="Tag")
+	 * @ORM\JoinTable(name="game_tags",
+	 *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
+	 *      )
 	 */
-	var $completion;
+	var $completion_tags;
 
 	/** @ORM\Column(type="integer", length=100, nullable=true) */
 	var $affection;
@@ -76,15 +80,9 @@ class Game extends BaseEntity {
 
 	public function __construct() {
 		parent::__construct();
-		$this->pictures = new ArrayCollection;
-	}
 
-	public function getCompletionPct(){
-		return $this->completion * Games::getSettings()->getCompletionFix();
-	}
-	
-	public function getCompletionVal(){
-		return $this->completion * Games::getSettings()->getCompletionRange();
+		$this->pictures = new ArrayCollection();
+		$this->completion_tags = new ArrayCollection();
 	}
 
 	/**
@@ -154,25 +152,6 @@ class Game extends BaseEntity {
 	/**
 	 * @return mixed
 	 */
-	public function getCompletion()
-	{
-		return $this->completion;
-	}
-
-	/**
-	 * @param mixed $completion
-	 */
-	public function setCompletion($completion)
-	{
-		if(0 > $completion || $completion > 1){
-			throw new Doctrine\InvalidArgumentException("Completion has to be within interval <0; 1>");
-		}
-		$this->completion = $completion;
-	}
-
-	/**
-	 * @return mixed
-	 */
 	public function getAffection()
 	{
 		return $this->affection;
@@ -217,6 +196,40 @@ class Game extends BaseEntity {
 	{
 		$this->primary_picture = $primary_picture;
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getCompletionTags()
+	{
+		return $this->completion_tags;
+	}
+
+	/**
+	 * @param mixed $completion_tags
+	 */
+	public function setCompletionTags($completion_tags)
+	{
+		$this->completion_tags = $completion_tags;
+	}
+
+	/**
+	 * @return Platform
+	 */
+	public function getPlatform()
+	{
+		return $this->platform;
+	}
+
+	/**
+	 * @param Platform $platform
+	 */
+	public function setPlatform($platform)
+	{
+		$this->platform = $platform;
+	}
+
+
 
 
 	

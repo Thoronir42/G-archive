@@ -149,3 +149,12 @@ form .error {
 .btn-list{
 	top: 5px; right: 5px; position: absolute;
 }
+
+.platform-panel > .panel-heading{
+	height: 80px;
+}
+
+.platform-panel .img-thumbnail{
+	width: 60px;
+	height:60px;
+}
