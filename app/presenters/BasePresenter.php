@@ -59,6 +59,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 			$manageItem->addSeparator();
 			$manageItem->addItem('Platforms:', 'Platformy');
 			$manageItem->addItem('States:', 'Stavy');
+			$manageItem->addItem('Tags:', 'Tagy');
 		}
 
 		return $menu;

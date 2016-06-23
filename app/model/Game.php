@@ -57,7 +57,7 @@ class Game extends BaseEntity {
 	 * @ORM\ManyToMany(targetEntity="Tag")
 	 * @ORM\JoinTable(name="game_tags",
 	 *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
-	 *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
+	 *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")}
 	 *      )
 	 */
 	var $completion_tags;

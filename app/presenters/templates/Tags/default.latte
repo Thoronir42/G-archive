@@ -1,0 +1,8 @@
+{block content}
+<div class="well well-lg" n:snippet="tags">
+
+		<span class="tag label label-info" n:foreach="$tags as $tag">
+			<span>{$tag->title}</span>
+			<a n:href="delete! $tag->title" class="label label-danger btn-label ajax">x</a>
+		</span>
+</div>
