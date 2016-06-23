@@ -42,6 +42,7 @@ class StatesPresenter extends BasePresenter
 
 	public function handleAdd($label = '')
 	{
+		$this->redrawControl('states');
 		$state = $this->states->findOneBy(['label' => $label]);
 		if($state || !$label){
 			return;
@@ -55,6 +56,7 @@ class StatesPresenter extends BasePresenter
 	}
 
 	public function handleEdit($pk, $value){
+		$value = Nette\Utils\Strings::trim($value);
 		if(!$value){
 			$this->sendJson([
 				'status' => 'error',

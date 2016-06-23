@@ -1,13 +1,13 @@
+$(function () {
+    $.nette.init();
+});
+
 $(document).ready( function () {
     initConfirmation();
 
     initSortable();
 
-    initStateAdder();
-
     initTags();
-
-    $.nette.init();
 });
 
 function initConfirmation() {
@@ -33,21 +33,6 @@ function initSortable() {
     };
 
     $sortables.sortable(options);
-}
-
-function initStateAdder(){
-    var $form = $("#form-state-adder");
-
-    $form.submit(function(e){
-        e.preventDefault();
-        var $input = $(this).find("input[name=label]");
-        var value = $input.val();
-
-        var action = $form.attr('action').replace('420', value);
-        //console.log(action);
-        $.get(action);
-        return;
-    });
 }
 
 function initTags(){

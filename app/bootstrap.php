@@ -15,7 +15,11 @@ $configurator->createRobotLoader()
 	->register();
 
 $configurator->addConfig(__DIR__ . '/config/config.neon');
-$configurator->addConfig(__DIR__ . '/config/config.local.neon');
+if (!isset($_SERVER['REMOTE_ADDR']) OR in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) { // !isset is for doctrine
+	$configurator->addConfig(__DIR__ . '/config/config.local.neon');
+} else {
+	$configurator->addConfig(__DIR__ . '/config/config.production.neon');
+}
 
 $container = $configurator->createContainer();
 

@@ -2,7 +2,7 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<form class="form-inline text-center" id="form-state-adder" action="{link add! '420'}">
+		<form class="form-inline text-center ajax" id="form-state-adder" action="{link add!}">
 			<p class="form-control-static">Popisek</p>
 			<input type="text" name="label" class="form-control">
 			<input type="submit" name="save" value="Přidat" class="btn btn-success">
@@ -23,6 +23,11 @@
 					</a>
 				{/if}
 			</li>
+			<script>
+				initEditable();
+				initSortable();
+				initConfirmation();
+			</script>
 		</ul>
 	</div>
 </div>
@@ -35,15 +40,14 @@
 	<script>
 		var handle_sort = {link sort!};
 
-		init_editable();
+		initEditable();
 
-		function init_editable(){
+		function initEditable(){
 			var options = {
 				success: function (response, newValue) {
 					if(response.status === 'error'){
 						return response.message;
 					}
-					console.log(response);
 				},
 				url: {link edit!},
 				name: 'label',
