@@ -54,6 +54,41 @@ class StatesPresenter extends BasePresenter
 		$this->redrawControl('states');
 	}
 
+	public function handleEdit($pk, $value){
+		if(!$value){
+			$this->sendJson([
+				'status' => 'error',
+				'message' => 'Název stavu nesmí být prázdný',
+			]);
+		}
+
+		$state = $this->states->findOneBy(['label' => $value]);
+		if($state){
+			$this->sendJson([
+				'status' => 'error',
+				'message' => 'Již existuje stav s popiskem ' . $value,
+			]);
+		}
+
+		/** @var State $state */
+		$state = $this->states->find($pk);
+		if(!$state){
+			$this->sendJson([
+				'status' => 'error',
+				'message' => 'Nebyl nalezen upravovaný stav',
+			]);
+		}
+
+		$state->label = $value;
+		$this->states->save($state);
+		
+		$this->sendJson([
+			'status' => 'success',
+			'pk' => $pk,
+			'new label' => $value,
+		]);
+	}
+
 	public function handleDelete($id){
 		$state = $this->states->find($id);
 		if(!$state){

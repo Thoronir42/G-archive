@@ -12,7 +12,7 @@
 		<ul class="list-group sortable" n:snippet="states">
 			<li class="list-group-item" n:foreach="$states as $state" data-id="{$state->id}">
 				<span class="glyphicon glyphicon-move"></span>
-				<span>{$state->label}</span>
+				<a data-pk="{$state->id}" class="editable-text">{$state->label}</a>
 				{if !$state->deleted}
 					<a class="btn btn-warning btn-list ajax" data-toggle="confirmation" n:href="delete! $state->id">
 						<i class="glyphicon glyphicon-trash"></i>
@@ -27,6 +27,29 @@
 	</div>
 </div>
 
-<script>
-	var handle_sort = {link sort!};
-</script>
+{/block}
+
+{block scripts}
+	{include #parent}
+
+	<script>
+		var handle_sort = {link sort!};
+
+		init_editable();
+
+		function init_editable(){
+			var options = {
+				success: function (response, newValue) {
+					if(response.status === 'error'){
+						return response.message;
+					}
+					console.log(response);
+				},
+				url: {link edit!},
+				name: 'label',
+				mode: 'inline'
+			};
+			$('a.editable-text').editable(options);
+		}
+	</script>
+{/block}
