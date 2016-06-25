@@ -1,0 +1,21 @@
+<div class="btn-group btn-group-vertical">
+	{foreach $platforms as $platform}
+		<div class="btn-group" role="group">
+			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<span class="caret"></span>
+				<span class="">{$platform->title}</span>
+				<span class="badge pull-right">{$platform->games|length}</span>
+			</a>
+			<ul class="dropdown-menu">
+				{var $groupedGames = $platform->getGroupedGames()}
+				<li n:foreach="$groupedGames->groups as $group">
+					{var $handle = $platform->getHandle() . '-' . $group->getHandle()}
+					<a href="#{$handle}">
+						<span>{$group->title}</span>
+						<span class="label label-default pull-right">{$group->games|length}</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	{/foreach}
+</div>

@@ -1,0 +1,28 @@
+<div class="game panel panel-default" id="g{$game->id}">
+	<div class="gameTitle panel-heading"><span>{$game->name}</span></div>
+	<div class="panel-body">
+		<div class="frame">
+			{include '../components/nullablePicture.latte', 'picture' => $game->primary_picture}
+		</div>
+
+		<ul class='list-group'>
+			<li class="list-group-item gr">
+				<span>Rating: {$game->affection}/{$max_affection}</span>
+			</li>
+			<li class="list-group-item">
+				<p>Dokončení</p>
+				<span class="label label-info" n:foreach="$game->completion_tags as $tag">{$tag->title}</span>
+			</li>
+
+			<li class="list-group-item">
+				<div class='gs cartridge'>CTG: {$game->cartridge_state->label}</div>
+				<div class="gs packing">PCK: {$game->packing_state->label}</div>
+				<div class="gs cartridge">MAN: {$game->manual_state->label}</div>
+			</li>
+			<li class='list-group-item buttons' n:if="$user->isLoggedIn()">
+				<a n:href="edit $game->id" class='btn btn-default'><span class='glyphicon glyphicon-edit'></span></a>
+				<a n:href="delete $game->id" class='btn btn-default pull-right' data-toggle="confirmation"><span class='glyphicon glyphicon-remove'></span></a>
+			</li>
+		</ul>
+	</div>
+</div>

@@ -8,9 +8,12 @@
 
 namespace App\Model;
 
+use App\Model\Helpers\GroupedGames;
+use App\Model\Helpers\NamedGameGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kdyby\Doctrine;
 use Doctrine\ORM\Mapping as ORM;
+use Nette\Utils\Strings;
 
 /**
  * @ORM\Entity
@@ -40,6 +43,9 @@ class Platform extends BaseEntity
 	 * @ORM\OneToMany(targetEntity="Game", mappedBy="platform")
 	 */
 	var $games;
+
+	/** @var GroupedGames  */
+	var $groupedGames;
 
 	public function __construct()
 	{
@@ -124,6 +130,20 @@ class Platform extends BaseEntity
 	public function setGames($games)
 	{
 		$this->games = $games;
+	}
+
+	public function getGroupedGames(){
+		if(!$this->groupedGames){
+			$this->groupedGames = new GroupedGames($this->games);
+		}
+
+		return $this->groupedGames;
+	}
+
+	public function getHandle()
+	{
+		$s = Strings::webalize($this->title);
+		return Strings::substring($s, 0, 4);
 	}
 
 	

@@ -1,6 +1,4 @@
 body{
-	background-image: url("/images/bgt.png");
-
 	background-color: orangered;
 	font-size: 15px;
 	line-height: 1.6;
@@ -13,7 +11,7 @@ body{
 	margin: 12px 0 20px;
 }
 
-.navbar, .dropdown-menu{
+.navbar, .navbar .dropdown-menu{
 	background-color: dimgray;
 }
 
@@ -151,12 +149,16 @@ form .error {
 }
 
 .platform-panel > .panel-heading{
-	height: 80px;
+	position: relative;
+	padding-left:60px;
 }
 
-.platform-panel .img-thumbnail{
-	width: 60px;
-	height:60px;
+.platform-panel .panel-heading .img-thumbnail{
+	position: absolute;
+	top: -10px; left: -10px;
+	transform: rotate(-7deg);
+
+	width: 60px; height:60px;
 }
 
 .tag.label{
@@ -171,4 +173,51 @@ form .error {
 	font-size:x-small;
 	top: 2px;
 	right: 2px;
+}
+
+.game-mini{
+	border-radius: 6px;
+	background: darkgray;
+	padding: 6px;
+	margin: 4px 6px;
+	display: inline-block;
+	width: 120px;
+
+}
+.game-mini img{
+	width: 100%;
+	background-color: dodgerblue;
+	border-color: aliceblue;
+}
+
+.game-mini .states{
+	color: transparent;
+	transition: color 0.25s;
+}
+
+.game-mini:hover .states{
+	color: black;
+}
+
+.game-mini .state{
+	display: inline-block;
+	width: 30%;
+	background: greenyellow;
+	border-radius: 3px;
+}
+.game-mini .controls{
+	margin-top: 6px;
+}
+
+.platform-navigation{
+	position: fixed;
+	width: 200px;
+}
+
+.platform-navigation > .btn-group-vertical, .platform-navigation > a{
+	width: 100%;
+}
+
+.platform-navigation > a{
+	margin-top: 10px;
 }

@@ -2,6 +2,8 @@
 
 namespace App\Presenters;
 
+use App\Controls\GameView;
+use App\Controls\PlatformView;
 use App\Forms\EditGameForm;
 use App\Forms\IEditGameFormFactory;
 use App\Model\Game;
@@ -19,8 +21,6 @@ use Nette\Application\UI\Form;
 
 class GamesPresenter extends BasePresenter
 {
-	const GAME_COLS = 3; // Musí být dělitel 12
-
 	/** @var Games @inject  */
 	public $games;
 
@@ -43,11 +43,10 @@ class GamesPresenter extends BasePresenter
 	{
 		$platforms = $this->platforms->findAll();
 
-		$game = $this->games->findOneBy(['platform' => $platforms[0]]);
-
 		$this->template->title  = "Vcesko";
 		$this->template->platforms = $platforms;
-		$this->template->column_count = self::GAME_COLS;
+
+		$this->template->unassignedGames = $this->games->findBy(['platform' => null]);
 	}
 
 
@@ -84,6 +83,16 @@ class GamesPresenter extends BasePresenter
 		}
 
 		$this->redirect('default');
+	}
+
+	public function createComponentGame()
+	{
+		return new GameView();
+	}
+
+	public function createComponentPlatform()
+	{
+		return new PlatformView();
 	}
 
 	public function createComponentEditGameForm()

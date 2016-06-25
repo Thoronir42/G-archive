@@ -1,20 +1,32 @@
 {block content}
     <h1>Vypis her</h1>
-    <div n:foreach="$platforms as $platform" class="panel panel-default platform-panel">
-        <div class="panel-heading">
-            <span>{$platform->title}</span>
-            <img n:if="$platform->picture" src="{$basePath . '/images/platforms/' . $platform->picture->path}"
-                                           class="img-thumbnail pull-right">
+    <div class="row">
+        <div class="col-md-9">
+            {foreach $platforms as $platform}
+                {control platform:single, $platform}
+            {/foreach}
+
+            <div class="panel panel-warning text-center" id="unassigned" n:if="$unassignedGames">
+                <div class="panel-heading">
+                    Hry bez přiřazené platformy
+                </div>
+                <div class="panel-body">
+                    {foreach $unassignedGames as $game}
+                        {control game:mini, $game}
+                    {/foreach}
+                </div>
+            </div>
         </div>
-        <div class="panel-body">
-            <div class="gameList row">
-                {foreach $platform->games as $game}
-                    <div class="col-md-4 class-sm-12">
-                        {include '../components/game.latte', 'game' => $game}
-                    </div>
-                {/foreach}
+        <div class="col-md-3 hidden-sm">
+            <div class="platform-navigation">
+                {control platform:navigation, $platforms}
+                <a class="btn btn-default" n:if="$unassignedGames">
+                    <span>Nezařazené hry</span>
+                    <span class="badge pull-right">{$unassignedGames|length}</span>
+                </a>
             </div>
         </div>
     </div>
+
 
 {/block}
