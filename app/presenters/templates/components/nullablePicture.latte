@@ -2,7 +2,7 @@
     @param picture
     [ @param imgClass ]
 *}
-{define ifClass}{ifset $imgClass}class="{$imgClass}"{/ifset}{/define}
+{define ifClass}{ifset $class}class="{$class}"{/ifset}{/define}
 
 {if $picture && file_exists($image_dir . $picture->path)}
     <img src="{$basePath}/images/games/{$picture->path}" alt="{$picture->description}" {include #ifClass}>

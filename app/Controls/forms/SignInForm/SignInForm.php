@@ -2,10 +2,13 @@
 
 namespace App\Forms;
 
+
+use Nette;
 use Nette\Application\UI as UI;
 
 
 use Nette\Application\UI\Form;
+use Nette\Security\AuthenticationException;
 use Nette\Security\User;
 
 class SignInForm extends UI\Control
@@ -62,8 +65,9 @@ class SignInForm extends UI\Control
 		try {
 			$this->user->login($values->username, $values->password);
 			$this->setErrorCount(0);
-		} catch (Nette\Security\AuthenticationException $e) {
+		} catch (AuthenticationException $e) {
 			$form->addError($this->errorMessage());
+			return;
 		}
 		$this->onSave($this);
 	}

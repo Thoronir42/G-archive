@@ -5,6 +5,7 @@ namespace App\Model;
 use App;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine;
+use Nette\Utils\Strings;
 
 /**
  * @ORM\Entity
@@ -57,9 +58,8 @@ class State extends BaseEntity
 		$this->label = $label;
 	}
 
-	function __toString()
-	{
-		return "" . $this->label;
+	public function getClass(){
+		return Strings::webalize($this->label);
 	}
 
 
