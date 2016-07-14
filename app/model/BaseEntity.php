@@ -2,42 +2,33 @@
 
 namespace App\Model;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Kdyby\Doctrine;
+use Kdyby\Doctrine\Entities\MagicAccessors;
 
-class BaseEntity extends Doctrine\Entities\BaseEntity{
+/**
+ * @property 	int		$id
+ * Class BaseEntity
+ * @package App\Model
+ */
+class BaseEntity
+{
+	use MagicAccessors;
 
-	/**
-	 * 
-	 * @return BaseEntity
-	 */
-	public static function fromPost() {
-		return self::createInstance();
-	}
-
-	protected static function createInstance($class = null) {
-		if ($class == null) {
-			return null;
-		}
-		$rc = new \ReflectionClass($class);
-		$instance = $rc->newInstance(null);
-		$rc->getConstructor()->invoke($instance);
-
-		$fields = $rc->getProperties();
-		foreach ($fields as $field) {
-			$name = $field->getName();
-			$instance->$name = filter_input(INPUT_POST, $name);
-		}
-		return $instance;
-	}
-
-	public function toArray() {
+	public function toArray()
+	{
 		$array = [];
 		foreach ($this as $field => $value) {
-			if($value instanceof BaseEntity){
+			if ($value instanceof BaseEntity) {
 				$value = $value->id;
+			} else if ($value instanceof Collection){
+				$value = array_map(function(BaseEntity $item){
+					return $item->id;
+				}, $value);
 			}
+
 			$array[$field] = $value;
 
 		}

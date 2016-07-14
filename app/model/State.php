@@ -8,6 +8,10 @@ use Kdyby\Doctrine;
 use Nette\Utils\Strings;
 
 /**
+ * @property 		int		$id
+ * @property		string	$label;
+ * @property-read	string	$class;
+ *
  * @ORM\Entity
  * @ORM\Table(name="state")
  */

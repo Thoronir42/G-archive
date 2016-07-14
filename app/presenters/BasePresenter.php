@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Controls\INavigationMenuFactory;
+use App\Controls\IStateViewFactory;
 use App\Libs\GASettings;
 use Nette;
 use App\Model;
@@ -16,6 +17,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
 	/** @var  INavigationMenuFactory @inject */
 	public $navigationMenuFactory;
+	
+	/** @var IStateViewFactory @inject */
+	public $stateViewFactory;
 
 	/** @var GASettings @inject */
 	public $gameParams;
@@ -63,5 +67,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		}
 
 		return $menu;
+	}
+
+	public function createComponentState()
+	{
+		return $this->stateViewFactory->create();
 	}
 }

@@ -202,7 +202,6 @@ form .error {
 .game-mini .state{
 	display: inline-block;
 	width: 30%;
-	background: greenyellow;
 	border-radius: 3px;
 }
 .game-mini .controls{

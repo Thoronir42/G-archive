@@ -2,8 +2,10 @@ services:
 	- App\Libs\GASettings
 	- App\Libs\ImageManager
 	- App\Libs\Initialiser
+	- App\Libs\Colors\Colors
 
 	- App\Controls\INavigationMenuFactory
+	- App\Controls\IStateViewFactory
 
 	- App\Forms\FormFactory
 	- App\Forms\ISignInFormFactory
