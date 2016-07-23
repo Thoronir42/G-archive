@@ -2,9 +2,6 @@
 namespace App\Model\Services;
 
 
-use App\Libs\GASettings;
-use App\Model\BaseEntity;
-use App\Model\Picture;
 use App\Model\State;
 use Kdyby\Doctrine\EntityManager;
 

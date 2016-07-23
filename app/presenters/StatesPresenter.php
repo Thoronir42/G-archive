@@ -15,6 +15,7 @@ use App\Model\State;
 use Nette;
 use App\Model;
 use Nette\Application\UI\Form;
+use Nette\Utils\Strings;
 
 
 class StatesPresenter extends BasePresenter
@@ -56,7 +57,7 @@ class StatesPresenter extends BasePresenter
 	}
 
 	public function handleEdit($pk, $value){
-		$value = Nette\Utils\Strings::trim($value);
+		$value = Strings::trim($value);
 		if(!$value){
 			$this->sendJson([
 				'status' => 'error',

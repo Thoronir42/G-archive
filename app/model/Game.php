@@ -17,14 +17,6 @@ class Game extends BaseEntity {
 
 	use Doctrine\Entities\Attributes\Identifier;
 
-	/**
-	 * 
-	 * @return Game
-	 */
-	public static function fromPost() {
-		return self::createInstance(self::class);
-	}
-
 	/** @ORM\Column(type="string", length=420) */
 	var $name;
 

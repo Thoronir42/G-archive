@@ -4,7 +4,7 @@ namespace App\Presenters;
 
 use App\Controls\INavigationMenuFactory;
 use App\Controls\IStateViewFactory;
-use App\Libs\GASettings;
+use App\Model\Structures\IGlobalSettings;
 use Nette;
 use App\Model;
 
@@ -21,14 +21,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	/** @var IStateViewFactory @inject */
 	public $stateViewFactory;
 
-	/** @var GASettings @inject */
-	public $gameParams;
+	/** @var IGlobalSettings @inject */
+	public $global_settings;
 
 	public function startup()
 	{
 		parent::startup();
 
-		$this->template->max_affection = $this->gameParams->getMaxRating();
+		$this->template->max_rating = $this->global_settings->getMaxRating();
 		$this->template->image_dir = __DIR__ . '/../../www/images/games/';
 
 		$this->template->title = '';

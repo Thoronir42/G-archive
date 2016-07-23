@@ -2,13 +2,14 @@
 
 namespace App\Forms;
 
-use App\Libs\GASettings;
+use App\Libs\StaticGlobalSettings;
 use App\Libs\ImageManager;
 use App\Model\Game;
 use App\Model\GamePicture;
 use App\Model\Services\Platforms;
 use App\Model\Services\States;
 use App\Model\Services\Tags;
+use App\Model\Structures\IGlobalSettings;
 use App\Model\Tag;
 use Nette\Application\UI as UI;
 use Nette\Application\UI\Form;
@@ -20,7 +21,7 @@ class EditGameForm extends UI\Control
 
 	public $onSave = [];
 
-	/** @var  GASettings */
+	/** @var  IGlobalSettings */
 	private $game_settings;
 
 	/** @var States */
@@ -40,7 +41,7 @@ class EditGameForm extends UI\Control
 
 
 	public function __construct(ImageManager $imageManager, States $states, Platforms $platforms,
-								GASettings $game_settings, Tags $tags)
+								IGlobalSettings $game_settings, Tags $tags)
 	{
 		parent::__construct();
 
