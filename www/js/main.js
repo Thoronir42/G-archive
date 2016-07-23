@@ -42,19 +42,16 @@ function initTags(){
 }
 
 function initAjaxModals() {
-    $('a.ajax.modal-link').click(function (e) {
-        var modal_id = $(this).data('modal-id');
-        var options = {
-            success: function (data) {
-                console.log('Success:', data);
-                console.log('Open #' + modal_id);
+    $('a.ajax-modal').click(function (e) {
 
-                var $modal = $('#' + modal_id);
-                $modal.modal('show');
-            }
-        };
-        $(this).netteAjax(e, options).always(function (data) {
-            console.log('Always:', data);
+        var modal_id = $(this).data('modal-id');
+        var $response = $(this).netteAjax(e);
+        $response.success(function (data) {
+            console.log('Success:', data);
+            console.log('Open #' + modal_id);
+
+            var $modal = $('#' + modal_id);
+            $modal.modal('show');
         });
     })
 }

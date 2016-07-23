@@ -1,7 +1,7 @@
 <div class="game-mini">
 	{control picture, $game->primary_picture}
 	<span>
-		<a n:href="open! $game->id" class="ajax modal-link" data-modal-id="game-modal">{$game->name}</a>
+		<a n:href="open! $game->id" class="ajax-modal" data-modal-id="game-modal">{$game->name}</a>
 	</span>
 	<div class="states">
 		<div class="state state-{$game->cartridge_state->class}" title="Cartridge: {$game->cartridge_state->label}">
