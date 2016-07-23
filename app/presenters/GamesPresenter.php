@@ -3,6 +3,8 @@
 namespace App\Presenters;
 
 use App\Controls\GameView;
+use App\Controls\IGameViewFactory;
+use App\Controls\IPlatformViewFactory;
 use App\Controls\PlatformView;
 use App\Forms\EditGameForm;
 use App\Forms\IEditGameFormFactory;
@@ -21,17 +23,19 @@ use Nette\Application\UI\Form;
 
 class GamesPresenter extends BasePresenter
 {
-	/** @var Games @inject  */
+	/** @var Games @inject */
 	public $games;
-
 	/** @var Platforms @inject */
 	public $platforms;
-
-	/** @var Pictures @inject  */
+	/** @var Pictures @inject */
 	public $pictures;
 
-	/** @var IEditGameFormFactory @inject  */
+	/** @var IEditGameFormFactory @inject */
 	public $editGameFormFactory;
+	/** @var IGameViewFactory @inject  */
+	public $game_view_factory;
+	/** @var IPlatformViewFactory @inject */
+	public $platform_view_factory;
 
 	public function startup()
 	{
@@ -43,15 +47,15 @@ class GamesPresenter extends BasePresenter
 	{
 		$platforms = $this->platforms->findAll();
 
-		$this->template->title  = "Vcesko";
+		$this->template->title = "Vcesko";
 		$this->template->platforms = $platforms;
 
 		$this->template->unassignedGames = $this->games->findBy(['platform' => null]);
 	}
 
 
-
-	public function actionEdit($id) {
+	public function actionEdit($id)
+	{
 		/** @var Game $game */
 		$game = $this->games->find($id);
 
@@ -67,15 +71,17 @@ class GamesPresenter extends BasePresenter
 		$this->template->title = "Úprava detailů hry $game->name";
 	}
 
-	public function renderAdd(){
+	public function renderAdd()
+	{
 		$this->setView('edit');
 
 		$this->template->title = "Vložení nové hry";
 	}
 
-	public function actionDelete($id){
+	public function actionDelete($id)
+	{
 		$game = $this->games->find($id);
-		if($game){
+		if ($game) {
 			$this->games->delete($game);
 			$this->flashMessage("Hra $game->name byla odstraněna");
 		} else {
@@ -85,22 +91,38 @@ class GamesPresenter extends BasePresenter
 		$this->redirect('default');
 	}
 
+	public function handleOpen($id)
+	{
+		$game = $this->games->find($id);
+		if(!$game){
+			$this->sendJson(['status' => 'error', 'message' => 'Game not found.']);
+		}
+		$this->template->platforms = [];
+		$this->template->selected_game = $game;
+		$this->redrawControl('gameModal');
+	}
+
 	public function createComponentGame()
 	{
-		return new GameView();
+		return $this->game_view_factory->create();
+	}
+
+	public function createComponentGameModal()
+	{
+		return $this->game_view_factory->create(GameView::TYPE_MODAL);
 	}
 
 	public function createComponentPlatform()
 	{
-		return new PlatformView();
+		return $this->platform_view_factory->create();
 	}
 
 	public function createComponentEditGameForm()
 	{
 		$form = $this->editGameFormFactory->create();
 
-		$form->onSave[] = function (Form $form, Game $game, GamePicture $picture = null, $tags = []){
-			if($picture){
+		$form->onSave[] = function (Form $form, Game $game, GamePicture $picture = null, $tags = []) {
+			if ($picture) {
 				$game->primary_picture = $picture;
 				$game->pictures->add($picture);
 
@@ -111,7 +133,7 @@ class GamesPresenter extends BasePresenter
 			$game->completion_tags->clear();
 
 			/** @var Tag $tag */
-			foreach ($tags as $tag){
+			foreach ($tags as $tag) {
 				$game->completion_tags->add($tag);
 			}
 

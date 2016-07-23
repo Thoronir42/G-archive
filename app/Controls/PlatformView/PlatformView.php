@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Stepan
- * Date: 25.06.2016
- * Time: 12:43
- */
 
 namespace App\Controls;
 
@@ -13,6 +7,15 @@ use Nette\Application\UI as UI;
 
 class PlatformView extends UI\Control
 {
+	/** @var IGameViewFactory */
+	private $game_view_factory;
+
+	public function __construct(IGameViewFactory $game_view_factory)
+	{
+		parent::__construct();
+		$this->game_view_factory = $game_view_factory;
+	}
+
 	public function renderSingle(Platform $platform){
 		$this->template->setFile(__DIR__ . '/platformSingle.latte');
 
@@ -31,6 +34,12 @@ class PlatformView extends UI\Control
 
 	public function createComponentGame()
 	{
-		return new GameView();
+		return $this->game_view_factory->create();
 	}
+}
+
+interface IPlatformViewFactory{
+
+	/** @return PlatformView */
+	public function create();
 }

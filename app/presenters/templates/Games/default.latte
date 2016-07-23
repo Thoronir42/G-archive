@@ -1,32 +1,38 @@
 {block content}
-    <h1>Vypis her</h1>
-    <div class="row">
-        <div class="col-md-9">
-            {foreach $platforms as $platform}
-                {control platform:single, $platform}
-            {/foreach}
+	<h1>Vypis her</h1>
+	<div class="row">
+		<div class="col-md-9">
+			{foreach $platforms as $platform}
+				{control platform:single, $platform}
+			{/foreach}
 
-            <div class="panel panel-warning text-center" id="unassigned" n:if="$unassignedGames">
-                <div class="panel-heading">
-                    Hry bez přiřazené platformy
-                </div>
-                <div class="panel-body">
-                    {foreach $unassignedGames as $game}
-                        {control game:mini, $game}
-                    {/foreach}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 hidden-sm">
-            <div class="platform-navigation">
-                {control platform:navigation, $platforms}
-                <a class="btn btn-default" n:if="$unassignedGames">
-                    <span>Nezařazené hry</span>
-                    <span class="badge pull-right">{$unassignedGames|length}</span>
-                </a>
-            </div>
-        </div>
-    </div>
+			<div class="panel panel-warning text-center" id="unassigned" n:if="$unassignedGames">
+				<div class="panel-heading">
+					Hry bez přiřazené platformy
+				</div>
+				<div class="panel-body">
+					{foreach $unassignedGames as $game}
+						{control game:mini, $game}
+					{/foreach}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3 hidden-sm">
+			<div class="platform-navigation">
+				{control platform:navigation, $platforms}
+				<a class="btn btn-default" n:if="$unassignedGames">
+					<span>Nezařazené hry</span>
+					<span class="badge pull-right">{$unassignedGames|length}</span>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div n:snippet="gameModal">
+		{ifset $selected_game}
+			{control gameModal, $selected_game}
+		{/ifset}
+	</div>
 
 
 {/block}

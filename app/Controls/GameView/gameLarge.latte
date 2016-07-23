@@ -2,12 +2,12 @@
 	<div class="gameTitle panel-heading"><span>{$game->name}</span></div>
 	<div class="panel-body">
 		<div class="frame">
-			{include '../components/nullablePicture.latte', 'picture' => $game->primary_picture}
+			{control picture, $game->primary_picture}
 		</div>
 
 		<ul class='list-group'>
 			<li class="list-group-item gr">
-				<span>Rating: {$game->affection}/{$max_affection}</span>
+				<span>Rating: {$game->affection}/{$max_rating}</span>
 			</li>
 			<li class="list-group-item">
 				<p>Dokončení</p>

@@ -1,11 +1,14 @@
 services:
-	- App\Libs\GASettings
+	- App\Model\Structures\StaticGlobalSettings
 	- App\Libs\ImageManager
 	- App\Libs\Initialiser
 	- App\Libs\Colors\Colors
 
 	- App\Controls\INavigationMenuFactory
 	- App\Controls\IStateViewFactory
+	- App\Controls\IGameViewFactory
+	- App\Controls\IPictureViewFactory
+	- App\Controls\IPlatformViewFactory
 
 	- App\Forms\FormFactory
 	- App\Forms\ISignInFormFactory

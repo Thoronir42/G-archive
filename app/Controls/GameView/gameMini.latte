@@ -1,10 +1,8 @@
 <div class="game-mini">
-	{if $game->primary_picture}
-		<img src="{$basePath}/images/games/{$game->primary_picture->path}" class="thumbnail">
-	{else}
-		<img src="{$basePath}/images/g404.png" class="thumbnail">
-	{/if}
-	<span>{$game->name}</span>
+	{control picture, $game->primary_picture}
+	<span>
+		<a n:href="open! $game->id" class="ajax modal-link" data-modal-id="game-modal">{$game->name}</a>
+	</span>
 	<div class="states">
 		<div class="state state-{$game->cartridge_state->class}" title="Cartridge: {$game->cartridge_state->label}">
 			<i class="glyphicon glyphicon-cog"></i>
@@ -18,7 +16,7 @@
 	</div>
 	{if $user->isLoggedIn()}
 		<div class="controls">
-			<a href="{plink edit $game->id}" class="btn btn-sm btn-info">
+			<a n:href="edit $game->id" class="btn btn-sm btn-info">
 				<i class="glyphicon glyphicon-edit"></i>
 			</a>
 		</div>

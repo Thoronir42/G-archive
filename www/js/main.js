@@ -4,10 +4,9 @@ $(function () {
 
 $(document).ready( function () {
     initConfirmation();
-
     initSortable();
-
     initTags();
+    initAjaxModals();
 });
 
 function initConfirmation() {
@@ -40,4 +39,22 @@ function initTags(){
         tags: true
     };
     $('.tags').select2(options)
+}
+
+function initAjaxModals() {
+    $('a.ajax.modal-link').click(function (e) {
+        var modal_id = $(this).data('modal-id');
+        var options = {
+            success: function (data) {
+                console.log('Success:', data);
+                console.log('Open #' + modal_id);
+
+                var $modal = $('#' + modal_id);
+                $modal.modal('show');
+            }
+        };
+        $(this).netteAjax(e, options).always(function (data) {
+            console.log('Always:', data);
+        });
+    })
 }

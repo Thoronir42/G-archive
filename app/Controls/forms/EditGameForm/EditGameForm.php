@@ -58,7 +58,7 @@ class EditGameForm extends UI\Control
 	public function render()
 	{
 		$this->template->setFile(__DIR__ . '/editGameForm.latte');
-		$this->template->max_affection = $this->game_settings->getMaxRating();
+		$this->template->max_rating = $this->game_settings->getMaxRating();
 
 		$this->template->render();
 	}
