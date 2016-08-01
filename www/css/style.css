@@ -5,7 +5,7 @@ body{
 }
 
 
-#headder{
+#header{
 	font-size: 4em;
 	font-family: Impact;
 	margin: 12px 0 20px;
@@ -15,7 +15,7 @@ body{
 	background-color: dimgray;
 }
 
-.nav li, .navbar-brand{
+.navbar .nav li, .navbar-brand{
 	color: black;
 	font-size: 1.2em;
 	font-weight: 400;
@@ -23,7 +23,7 @@ body{
 .navbar-brand{
 	font-weight:900;
 }
-.nav a, .navbar-brand{
+.navbar .nav a, .navbar-brand{
 	color:cornsilk !important;
 }
 .dropdown-menu a:hover{
@@ -31,7 +31,7 @@ body{
 	color: darkred !important;
 }
 
-.nav li.active a,
+.navbar .nav li.active a,
 .nav .open li.active a,
 .nav .open a.dropdown-toggle{
 	color: cornsilk !important;
@@ -190,6 +190,16 @@ form .error {
 	width: 120px;
 
 }
+.game-mini .thumbnail{
+	margin: 0;
+}
+.game-mini a{
+	display: inline-block;
+	color: black;
+	font-weight: bold;
+	margin: 6px 0 2px;
+}
+
 .game-mini img{
 	width: 100%;
 	background-color: dodgerblue;

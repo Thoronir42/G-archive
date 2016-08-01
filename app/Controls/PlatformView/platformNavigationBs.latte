@@ -1,0 +1,23 @@
+<nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs affix" id="navbar-spy">
+	<ul class="nav bs-docs-sidenav">
+		<li class="" n:foreach="$platforms as $platform">
+			<a href="#{$platform->getHandle()}">
+				<span>{$platform->title}</span>
+				<span class="badge pull-right">{$platform->games|length}</span>
+			</a>
+			<ul class="nav">
+				{var $groupedGames = $platform->getGroupedGames()}
+				<li class="" n:foreach="$groupedGames->groups as $group">
+					{var $handle = $platform->getHandle() . '-' . $group->getHandle()}
+					<a href="#{$handle}">
+						<span>{$group->title}</span>
+						<span class="label label-default pull-right">{$group->games|length}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li n:foreach="$additional_links as $link">
+			<a n:href="$link['target']">{$link['caption']}</a>
+		</li>
+	</ul>
+</nav>

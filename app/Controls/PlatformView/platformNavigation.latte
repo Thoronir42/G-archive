@@ -18,4 +18,9 @@
 			</ul>
 		</div>
 	{/foreach}
+	{foreach $additional_links as $link}
+	<div class="btn-group" role="group">
+		<a  class="btn btn-default" n:href="$link['target']">{$link['caption']}</a>
+	</div>
+	{/foreach}
 </div>

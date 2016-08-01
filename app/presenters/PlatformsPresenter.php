@@ -42,6 +42,7 @@ class PlatformsPresenter extends BasePresenter
 		$platforms = $this->platforms->findAll();
 
 		$this->template->platforms = $platforms;
+
 	}
 
 	public function actionEdit($id)

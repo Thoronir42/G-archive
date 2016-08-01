@@ -43,14 +43,25 @@ class GamesPresenter extends BasePresenter
 		$this->steelCheck("Pro správu her musíš být přihlášen.");
 	}
 
-	public function renderDefault()
+	public function renderDefault($bs = false)
 	{
 		$platforms = $this->platforms->findAll();
 
-		$this->template->title = "Vcesko";
-		$this->template->platforms = $platforms;
 
-		$this->template->unassignedGames = $this->games->findBy(['platform' => null]);
+		/** @var PlatformView $platformComponent */
+		$platformComponent = $this['platform'];
+		$platformComponent->setListBootstrapTemplate($bs);
+
+		$this->template->title = "Výpis her podle platforem";
+		$this->template->platforms = $platforms;
+		$this->template->unassignedGames = $unassigned = $this->games->findBy(['platform' => null]);
+
+		$additional_nav_links = [];
+
+		if($unassigned){
+			$additional_nav_links[] = $this->createLink('this#unassigned', 'Hry bez platformy');
+		}
+		$this->template->additional_nav_links = $additional_nav_links;
 	}
 
 

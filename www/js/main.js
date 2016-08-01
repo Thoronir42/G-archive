@@ -2,11 +2,12 @@ $(function () {
     $.nette.init();
 });
 
-$(document).ready( function () {
+$(document).ready(function () {
     initConfirmation();
     initSortable();
     initTags();
     initAjaxModals();
+    initScrollspy();
 });
 
 function initConfirmation() {
@@ -27,14 +28,14 @@ function initSortable() {
 
     var options = {
         update: function () {
-            $.get(handle_sort, {'sort': $sortables.sortable('toArray', { attribute: 'data-id' })});
+            $.get(handle_sort, {'sort': $sortables.sortable('toArray', {attribute: 'data-id'})});
         }
     };
 
     $sortables.sortable(options);
 }
 
-function initTags(){
+function initTags() {
     var options = {
         tags: true
     };
@@ -54,4 +55,19 @@ function initAjaxModals() {
             $modal.modal('show');
         });
     })
+}
+
+function initScrollspy() {
+    $('body').scrollspy({
+        target: '#navbar-spy',
+        offset: 100
+    });
+    var i = 0;
+    $('#navbar-spy').on('activate.bs.scrollspy', function (e) {
+        console.log(this);
+        $(this).find('li ul').hide();
+
+        if(i < 100)
+            $(this).find('li.active ul').show();
+    });
 }

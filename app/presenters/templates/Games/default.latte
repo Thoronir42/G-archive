@@ -8,7 +8,7 @@
 
 			<div class="panel panel-warning text-center" id="unassigned" n:if="$unassignedGames">
 				<div class="panel-heading">
-					Hry bez přiřazené platformy
+					<span>Hry bez přiřazené platformy</span>
 				</div>
 				<div class="panel-body">
 					{foreach $unassignedGames as $game}
@@ -19,11 +19,8 @@
 		</div>
 		<div class="col-md-3 hidden-sm">
 			<div class="platform-navigation">
-				{control platform:navigation, $platforms}
-				<a class="btn btn-default" n:if="$unassignedGames">
-					<span>Nezařazené hry</span>
-					<span class="badge pull-right">{$unassignedGames|length}</span>
-				</a>
+				{control platform:navigation, $platforms, $additional_nav_links}
+
 			</div>
 		</div>
 	</div>

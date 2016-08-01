@@ -10,6 +10,7 @@
     <title>{ifset title}{include title|striptags} | {/ifset}G-archive</title>
 
     <link rel="stylesheet" href="{$basePath}/css/bootstrap.css">
+    <link rel="stylesheet" href="{$basePath}/css/bootstrap-docs.css">
     <link rel="stylesheet" href="{$basePath}/css/input-file.css">
     <link rel="stylesheet" href="{$basePath}/css/style.css">
     <link rel="stylesheet" href="{$basePath}/css/select2.min.css">
@@ -32,11 +33,9 @@
 {control menu:top}
 
 <div class="container">
-
-
     <div class="row" style="margin-top: 40px">
         <div class="col-sm-offset-1 col-xs-10">
-            <div id="headder">{$title}</div>
+            <div id="header">{$title}</div>
         </div>
     </div>
     <div id="body-container" class="row">

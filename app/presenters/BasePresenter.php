@@ -2,9 +2,10 @@
 
 namespace App\Presenters;
 
-use App\Controls\INavigationMenuFactory;
+use App\Controls\NavigationMenu\INavigationMenuFactory;
 use App\Controls\IStateViewFactory;
 use App\Model\Structures\IGlobalSettings;
+use Core\Traits\LinkMaking;
 use Nette;
 use App\Model;
 
@@ -14,6 +15,7 @@ use App\Model;
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
+	use LinkMaking;
 
 	/** @var  INavigationMenuFactory @inject */
 	public $navigationMenuFactory;
@@ -53,17 +55,18 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	{
 		$menu = $this->navigationMenuFactory->create();
 		$menu->setTitle('G archive');
+		$menu->setBrandAction('Games:');
 
-		$menu->addItem('Games:default', 'Hry');
-		$menu->addItem('Pictures:', 'Obrázky');
+		$menu->addLink('Games:default', 'Hry');
+		$menu->addLink('Pictures:', 'Obrázky');
 
 		if($this->user->isLoggedIn()){
-			$manageItem = $menu->addItem('default', 'Správa');
-			$manageItem->addItem('Games:add', 'Zadat novou hru');
+			$manageItem = $menu->addLink('default', 'Správa');
+			$manageItem->addLink('Games:add', 'Zadat novou hru');
 			$manageItem->addSeparator();
-			$manageItem->addItem('Platforms:', 'Platformy');
-			$manageItem->addItem('States:', 'Stavy');
-			$manageItem->addItem('Tags:', 'Tagy');
+			$manageItem->addLink('Platforms:', 'Platformy');
+			$manageItem->addLink('States:', 'Stavy');
+			$manageItem->addLink('Tags:', 'Tagy');
 		}
 
 		return $menu;
