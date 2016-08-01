@@ -58,16 +58,20 @@ function initAjaxModals() {
 }
 
 function initScrollspy() {
-    $('body').scrollspy({
-        target: '#navbar-spy',
+    var $body = $('body');
+    var spy_target_selector = '#navbar-spy';
+    var $spy_target = $(spy_target_selector);
+    $body.scrollspy({
+        target: spy_target_selector,
         offset: 100
     });
-    var i = 0;
-    $('#navbar-spy').on('activate.bs.scrollspy', function (e) {
-        console.log(this);
-        $(this).find('li ul').hide();
 
-        if(i < 100)
-            $(this).find('li.active ul').show();
+    $spy_target.on('activate.bs.scrollspy', function () {
+        $(this).find('li ul').hide();
+        $(this).find('li.active ul').show();
     });
+    $spy_target.trigger('activate.bs.scrollspy', $spy_target);
+
+
+
 }
