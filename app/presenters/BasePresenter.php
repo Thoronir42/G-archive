@@ -61,7 +61,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$menu->addLink('Pictures:', 'Obrázky');
 
 		if($this->user->isLoggedIn()){
-			$manageItem = $menu->addLink('default', 'Správa');
+			$manageItem = $menu->addLink('Steel:default', 'Správa');
 			$manageItem->addLink('Games:add', 'Zadat novou hru');
 			$manageItem->addSeparator();
 			$manageItem->addLink('Platforms:', 'Platformy');

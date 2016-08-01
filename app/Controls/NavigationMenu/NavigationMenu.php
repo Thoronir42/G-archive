@@ -56,10 +56,11 @@ class NavigationMenu extends UI\Control
 			if($subitem->getRole() == 'dropdown'){
 				return $this->currentDropdown($subitem);
 			}
-			if($this->presenter->isLinkCurrent($item->target)){
+			if($this->presenter->isLinkCurrent($subitem->target)){
 				return true;
 			}
 		}
+
 		return false;
 	}
 

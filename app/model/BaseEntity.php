@@ -9,9 +9,10 @@ use Kdyby\Doctrine;
 use Kdyby\Doctrine\Entities\MagicAccessors;
 
 /**
- * @property 	int		$id
  * Class BaseEntity
  * @package App\Model
+ *
+ * @property 	int		$id
  */
 class BaseEntity
 {
@@ -26,7 +27,7 @@ class BaseEntity
 			} else if ($value instanceof Collection){
 				$value = array_map(function(BaseEntity $item){
 					return $item->id;
-				}, $value);
+				}, $value->toArray());
 			}
 
 			$array[$field] = $value;

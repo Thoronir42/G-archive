@@ -14,7 +14,7 @@
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav">
 				{foreach $items as $item}
-					{switch $item->role}
+					{switch $item->getRole()}
 						{case 'separator'}
 						{dump $item}
 						{case 'link'}
@@ -57,7 +57,7 @@
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown">{$parent->caption}<span class="caret"></span></a>
 		<ul class="dropdown-menu">
 			{foreach $parent->items as $item}
-				{switch $item->role}
+				{switch $item->getRole()}
 					{case 'separator'}
 					<li role="separator" class="divider"></li>
 				{case 'link'}

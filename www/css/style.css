@@ -31,7 +31,7 @@ body{
 	color: darkred !important;
 }
 
-.navbar .nav li.active a,
+.navbar .nav li.active>a,
 .nav .open li.active a,
 .nav .open a.dropdown-toggle{
 	color: cornsilk !important;
