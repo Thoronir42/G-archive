@@ -48,8 +48,8 @@ function initAjaxModals() {
         var modal_id = $(this).data('modal-id');
         var $response = $(this).netteAjax(e);
         $response.success(function (data) {
-            console.log('Success:', data);
-            console.log('Open #' + modal_id);
+            //console.log('Success:', data);
+            //console.log('Open #' + modal_id);
 
             var $modal = $('#' + modal_id);
             $modal.modal('show');

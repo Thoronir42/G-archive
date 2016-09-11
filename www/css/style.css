@@ -1,5 +1,5 @@
 body{
-	background-color: orangered;
+	background-color: black;
 	font-size: 15px;
 	line-height: 1.6;
 }
@@ -9,10 +9,11 @@ body{
 	font-size: 4em;
 	font-family: Impact;
 	margin: 12px 0 20px;
+	color: #d000d0;
 }
 
 .navbar, .navbar .dropdown-menu{
-	background-color: dimgray;
+	background-color: rgba(25,25,25,0.7);
 }
 
 .navbar .nav li, .navbar-brand{
@@ -24,25 +25,27 @@ body{
 	font-weight:900;
 }
 .navbar .nav a, .navbar-brand{
-	color:cornsilk !important;
+	color: #3296ff !important;
 }
 .dropdown-menu a:hover{
-	background-color: cornsilk !important;
-	color: darkred !important;
+	background-color: #d000d0 !important;
+	color: black !important;
 }
 
 .navbar .nav li.active>a,
 .nav .open li.active a,
 .nav .open a.dropdown-toggle{
-	color: cornsilk !important;
-	background-color: darkred !important;
+	color: black !important;
+	background-color: #d000d0 !important;
 }
 .nav .divider{
 	background-color: black;
 }
 
-#bodyContent{
+#body-content{
 	margin-bottom: 20px;
+	background-color: rgba(25,25,25,0.55);
+	border-color: rgb(50,150,255);
 }
 
 h1 {
@@ -182,9 +185,9 @@ form .error {
 }
 
 .game-mini{
-	border-radius: 6px;
-	background: darkgray;
-	padding: 6px;
+	border-radius: 3px;
+	background: rgba(0,0,0,0.55);
+	padding: 3px;
 	margin: 4px 6px;
 	display: inline-block;
 	width: 120px;
@@ -197,13 +200,14 @@ form .error {
 	display: inline-block;
 	color: black;
 	font-weight: bold;
+	
 	margin: 6px 0 2px;
 }
 
 .game-mini img{
 	width: 100%;
-	background-color: dodgerblue;
-	border-color: aliceblue;
+	background-color: black;
+	border-color: #d000d0;
 }
 
 .game-mini .states{
